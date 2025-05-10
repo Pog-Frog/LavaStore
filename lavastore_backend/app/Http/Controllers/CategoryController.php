@@ -70,8 +70,7 @@ class CategoryController extends Controller
         $category = $this->categoryRepository->delete($id);
 
         return response()->json([
-            'message' => 'Category deleted successfully',
-            'data' => $category
+            'message' => 'Category deleted successfully'
         ], 200);
     }
     

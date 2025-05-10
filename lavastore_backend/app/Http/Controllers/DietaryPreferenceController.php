@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class DietaryPreferenceController extends Controller
 {
     use AuthorizesRequests;
-    
+
     public function __construct(protected DietaryPreferenceRepository $dietaryPreferenceRepository) {
         $this->authorizeResource(DietaryPreference::class, 'dietaryPreference');
     }
@@ -84,8 +84,7 @@ class DietaryPreferenceController extends Controller
         }
 
         return response()->json([
-            'message' => 'Dietary preference deleted successfully',
-            'data' => $dietaryPreference
+            'message' => 'Dietary preference deleted successfully'
         ], 200);
     }
 }
