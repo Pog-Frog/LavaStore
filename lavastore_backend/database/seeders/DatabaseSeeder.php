@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\DietaryPreference;
-use App\Models\DietaryPreferenceProduct;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,8 +20,17 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@lavastore.com',
+            'password' => Hash::make('password'),
+            'is_admin' => true,
+        ]);
+
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@lavastore.com',
+            'password' => Hash::make('password'),
+            'is_admin' => false,
         ]);
 
         Category::factory(10)->create();
@@ -44,9 +53,7 @@ class DatabaseSeeder extends Seeder
             DietaryPreference::create(['name' => $preference]);
         }
 
-        // Create products and attach random dietary preferences
         Product::factory(100)->create()->each(function ($product) {
-            // Attach 1-3 random dietary preferences to each product
             $product->dietaryPreferences()->attach(
                 DietaryPreference::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray()
             );
