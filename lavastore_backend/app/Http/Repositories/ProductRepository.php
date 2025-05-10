@@ -23,7 +23,9 @@ class ProductRepository {
         if(!$product) {
             return null;
         }
-        $product->dietaryPreferences()->attach($data['dietary_preferences']);
+        if(isset($data['dietary_preferences'])) {
+            $product->dietaryPreferences()->attach($data['dietary_preferences']);
+        }
         return $product;
     }
 
@@ -33,7 +35,9 @@ class ProductRepository {
             return null;
         }
         $product->update($data);
-        $product->dietaryPreferences()->sync($data['dietary_preferences']);
+        if(isset($data['dietary_preferences'])) {
+            $product->dietaryPreferences()->sync($data['dietary_preferences']);
+        }
         return $product;
     }   
 

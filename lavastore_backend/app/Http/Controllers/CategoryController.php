@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Repositories\CategoryRepository;
 use App\Http\Requests\CategoryCreateRequest;
 use App\Http\Requests\CategoryUpdateRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -22,7 +23,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'message' => 'Categories retrieved successfully',
-            'data' => $categories
+            'data' => CategoryResource::collection($categories)
         ], 200);
     }
 
@@ -33,7 +34,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'message' => 'Category created successfully',
-            'data' => $category
+            'data' => new CategoryResource($category)
         ], 201);
     }
 
@@ -49,7 +50,7 @@ class CategoryController extends Controller
         $this->authorize('view', $category);
         return response()->json([
             'message' => 'Category retrieved successfully',
-            'data' => $category
+            'data' => new CategoryResource($category)
         ], 200);
     }
 
@@ -67,7 +68,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'message' => 'Category updated successfully',
-            'data' => $category
+            'data' => new CategoryResource($category)
         ], 200);
     }
 
