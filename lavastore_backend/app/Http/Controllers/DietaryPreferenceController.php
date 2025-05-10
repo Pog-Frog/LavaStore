@@ -10,13 +10,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DietaryPreferenceController extends Controller
 {
-    use AuthorizesRequests;
 
-    public function __construct(protected DietaryPreferenceRepository $dietaryPreferenceRepository) {
-        $this->authorizeResource(DietaryPreference::class, 'dietaryPreference');
-    }
+    public function __construct(protected DietaryPreferenceRepository $dietaryPreferenceRepository) {}
 
-    public function index(): JsonResponse {
+    public function index(): JsonResponse
+    {
         $dietaryPreferences = $this->dietaryPreferenceRepository->getAll();
 
         return response()->json([
@@ -25,13 +23,14 @@ class DietaryPreferenceController extends Controller
         ], 200);
     }
 
-    public function store(Request $request): JsonResponse {
+    public function store(Request $request): JsonResponse
+    {
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
         $dietaryPreference = $this->dietaryPreferenceRepository->create($request->all());
-        if(!$dietaryPreference) {
+        if (!$dietaryPreference) {
             return response()->json([
                 'message' => 'Dietary preference not created',
             ], 400);
@@ -43,9 +42,10 @@ class DietaryPreferenceController extends Controller
         ], 201);
     }
 
-    public function show(string $id): JsonResponse {
+    public function show(string $id): JsonResponse
+    {
         $dietaryPreference = $this->dietaryPreferenceRepository->getById($id);
-        if(!$dietaryPreference) {
+        if (!$dietaryPreference) {
             return response()->json([
                 'message' => 'Dietary preference not found',
             ], 404);
@@ -57,13 +57,14 @@ class DietaryPreferenceController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, string $id): JsonResponse {
+    public function update(Request $request, string $id): JsonResponse
+    {
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
         $dietaryPreference = $this->dietaryPreferenceRepository->update($id, $request->all());
-        if(!$dietaryPreference) {
+        if (!$dietaryPreference) {
             return response()->json([
                 'message' => 'Dietary preference not updated',
             ], 400);
@@ -75,9 +76,10 @@ class DietaryPreferenceController extends Controller
         ], 200);
     }
 
-    public function destroy(string $id): JsonResponse {
+    public function destroy(string $id): JsonResponse
+    {
         $dietaryPreference = $this->dietaryPreferenceRepository->delete($id);
-        if(!$dietaryPreference) {
+        if (!$dietaryPreference) {
             return response()->json([
                 'message' => 'Dietary preference not deleted',
             ], 400);
