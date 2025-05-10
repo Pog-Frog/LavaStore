@@ -43,7 +43,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
         ]);
 
         $user = $this->userRepository->createUser([
@@ -52,11 +52,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('auth-token')->plainTextToken;
-
         return response()->json([
-            'token' => $token,
-            'user' => new UserResource($user)
+            'message' => 'User created successfully'
         ], 201);
     }
 } 
