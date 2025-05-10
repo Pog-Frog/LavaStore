@@ -6,7 +6,11 @@ use App\Models\Category;
 
 class CategoryRepository {
     public function getById(string $id) {
-        return Category::findOrFail($id);
+        $category = Category::query()->where('id', $id)->first();
+        if(!$category) {
+            return null;
+        }
+        return $category;
     }
 
     public function getAll() {
@@ -22,11 +26,20 @@ class CategoryRepository {
         return $category;
     }
 
-    public function update(Category $category, array $data) {
+    public function update(string $id, array $data) {
+        $category = Category::find($id);
+        if(!$category) {
+            return null;
+        }
         $category->update($data);
+        return $category;
     }
 
-    public function delete(Category $category) {
+    public function delete(string $id) {
+        $category = Category::find($id);
+        if(!$category) {
+            return null;
+        }
         return $category->delete();
     }
 }
