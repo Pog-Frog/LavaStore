@@ -5,19 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Repositories\CategoryRepository;
 use App\Http\Requests\CategoryCreateRequest;
 use App\Http\Requests\CategoryUpdateRequest;
+use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Models\Category;
 
 class CategoryController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(protected CategoryRepository $categoryRepository) {
-        $this->authorizeResource(Category::class, 'category');
-    }
+    public function __construct(protected CategoryRepository $categoryRepository) {}
 
-    public function index(): JsonResponse {
+    public function index(): JsonResponse
+    {
+        $this->authorize('viewAny', Category::class);
         $categories = $this->categoryRepository->getAll();
 
         return response()->json([
@@ -26,13 +26,10 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    public function store(CategoryCreateRequest $request): JsonResponse {
-        $category = $this->categoryRepository->create($request->all());
-        if(!$category) {
-            return response()->json([
-                'message' => 'Category not created',
-            ], 400);
-        }
+    public function store(CategoryCreateRequest $request): JsonResponse
+    {
+        $this->authorize('create', Category::class);
+        $category = $this->categoryRepository->create($request->validated());
 
         return response()->json([
             'message' => 'Category created successfully',
@@ -40,38 +37,54 @@ class CategoryController extends Controller
         ], 201);
     }
 
-    public function show(string $id): JsonResponse {
+    public function show(string $id): JsonResponse
+    {
         $category = $this->categoryRepository->getById($id);
-        if(!$category) {
+        if (!$category) {
             return response()->json([
                 'message' => 'Category not found',
             ], 404);
         }
+
+        $this->authorize('view', $category);
         return response()->json([
             'message' => 'Category retrieved successfully',
             'data' => $category
         ], 200);
     }
-    
-    public function update(CategoryUpdateRequest $request, string $id): JsonResponse {
-        $category = $this->categoryRepository->update($id, $request->all());
-        if(!$category) {
+
+    public function update(CategoryUpdateRequest $request, string $id): JsonResponse
+    {
+        $category = $this->categoryRepository->getById($id);
+        if (!$category) {
             return response()->json([
-                'message' => 'Category not updated',
-            ], 400);
+                'message' => 'Category not found',
+            ], 404);
         }
+
+        $this->authorize('update', $category);
+        $category = $this->categoryRepository->update($id, $request->validated());
+
         return response()->json([
             'message' => 'Category updated successfully',
             'data' => $category
         ], 200);
     }
 
-    public function destroy(string $id): JsonResponse {
-        $category = $this->categoryRepository->delete($id);
+    public function destroy(string $id): JsonResponse
+    {
+        $category = $this->categoryRepository->getById($id);
+        if (!$category) {
+            return response()->json([
+                'message' => 'Category not found',
+            ], 404);
+        }
+
+        $this->authorize('delete', $category);
+        $this->categoryRepository->delete($id);
 
         return response()->json([
             'message' => 'Category deleted successfully'
         ], 200);
     }
-    
 }

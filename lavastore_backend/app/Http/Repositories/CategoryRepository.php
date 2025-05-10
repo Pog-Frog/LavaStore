@@ -27,7 +27,7 @@ class CategoryRepository {
     }
 
     public function update(string $id, array $data) {
-        $category = Category::find($id);
+        $category = Category::query()->where('id', $id)->first();
         if(!$category) {
             return null;
         }
@@ -36,7 +36,7 @@ class CategoryRepository {
     }
 
     public function delete(string $id) {
-        $category = Category::find($id);
+        $category = Category::query()->where('id', $id)->first();
         if(!$category) {
             return null;
         }
