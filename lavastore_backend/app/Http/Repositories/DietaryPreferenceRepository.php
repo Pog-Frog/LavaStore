@@ -6,7 +6,11 @@ use App\Models\DietaryPreference;
 
 class DietaryPreferenceRepository {
     public function getById(string $id) {
-        return DietaryPreference::findOrFail($id);
+        $dietaryPreference = DietaryPreference::findOrFail($id);
+        if(!$dietaryPreference) {
+            return null;
+        }
+        return $dietaryPreference;
     }
 
     public function getAll() {
@@ -22,11 +26,20 @@ class DietaryPreferenceRepository {
         return $dietaryPreference;
     }
 
-    public function update(DietaryPreference $dietaryPreference, array $data) {
+    public function update(string $id, array $data) {
+        $dietaryPreference = DietaryPreference::findOrFail($id);
+        if(!$dietaryPreference) {
+            return null;
+        }
         $dietaryPreference->update($data);
+        return $dietaryPreference;
     }
 
-    public function delete(DietaryPreference $dietaryPreference) {
+    public function delete(string $id) {
+        $dietaryPreference = DietaryPreference::findOrFail($id);
+        if(!$dietaryPreference) {
+            return null;
+        }
         return $dietaryPreference->delete();
     }
 }
