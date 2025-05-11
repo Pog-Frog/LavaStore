@@ -18,9 +18,9 @@ export class ProductService {
       .set('per_page', (filters.per_page || 15).toString())
       .set('include', 'category,dietaryPreferences');
 
-    if (filters.category) params = params.set('category_id', filters.category.toString());
-    if (filters.min_price) params = params.set('min_price', filters.min_price.toString());
-    if (filters.max_price) params = params.set('max_price', filters.max_price.toString());
+    if (filters.category) params = params.set('filter[category_id]', filters.category.toString());
+    // if (filters.min_price) params = params.set('filter[min_price]', filters.min_price.toString());
+    // if (filters.max_price) params = params.set('filter[max_price]', filters.max_price.toString());
     if (filters.sort_by) {
       const sortMap: { [key: string]: string } = {
         'popularity': '-created_at',

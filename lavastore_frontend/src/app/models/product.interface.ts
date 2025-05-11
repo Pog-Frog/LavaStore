@@ -1,13 +1,11 @@
 export interface Category {
     id: number;
     name: string;
-    description?: string;
 }
 
 export interface DietaryPreference {
     id: number;
     name: string;
-    description?: string;
 }
 
 export interface Product {

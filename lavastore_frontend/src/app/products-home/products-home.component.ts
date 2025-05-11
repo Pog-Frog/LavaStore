@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from "../layouts/home/home.component";
 import { ProductService } from '../services/product.service';
-import { Product, ProductFilters } from '../models/product.interface';
+import { Category, Product, ProductFilters } from '../models/product.interface';
 import { FormsModule } from '@angular/forms';
+import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-products-home',
@@ -17,6 +18,7 @@ export class ProductsHomeComponent implements OnInit {
   error: string | null = null;
   currentPage = 1;
   totalPages = 1;
+  categories: Category[] = [];
   filters: ProductFilters = {
     category: undefined,
     min_price: 0,
@@ -27,10 +29,11 @@ export class ProductsHomeComponent implements OnInit {
     per_page: 6
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCategories();
   }
 
   loadProducts(): void {
@@ -52,9 +55,17 @@ export class ProductsHomeComponent implements OnInit {
     });
   }
 
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (response) => {
+        this.categories = response.data;
+      }
+    });
+  }
+
   onCategoryChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
-    this.filters.category = select.value ? Number(select.value) : undefined;
+    this.filters.category = parseInt(select.value);
     this.filters.page = 1;
     this.loadProducts();
   }

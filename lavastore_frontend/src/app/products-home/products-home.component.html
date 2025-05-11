@@ -18,10 +18,7 @@
                                     (change)="onCategoryChange($event)"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white">
                                     <option [ngValue]="undefined">All Categories</option>
-                                    <option value="1">Powders</option>
-                                    <option value="2">Ready-to-drink</option>
-                                    <option value="3">Hot & Savory</option>
-                                    <option value="4">Supplements</option>
+                                    <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
