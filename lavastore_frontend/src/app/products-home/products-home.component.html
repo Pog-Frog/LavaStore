@@ -110,7 +110,7 @@
                             <img [src]="product.image_url" [alt]="product.name" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
                             <div *ngIf="product.original_price"
                                 class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                {{ ((product.price - product.original_price) / product.price * 100).toFixed(0) }}% OFF
+                                {{ ((product.original_price - product.price) / product.original_price * 100).toFixed(0) }}% OFF
                             </div>
                         </div>
                         <div class="p-5">
@@ -120,8 +120,8 @@
                             </p>
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <span class="text-xl font-bold text-gray-900">${{ product.original_price || product.price }}</span>
-                                    <span *ngIf="product.original_price" class="text-sm text-gray-500 line-through ml-2">${{ product.price }}</span>
+                                    <span class="text-xl font-bold text-gray-900">${{ product.price || product.original_price }}</span>
+                                    <span *ngIf="product.original_price" class="text-sm text-gray-500 line-through ml-2">${{ product.original_price }}</span>
                                 </div>
                                 <button
                                     class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
