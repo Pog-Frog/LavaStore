@@ -21,7 +21,13 @@ class ProductFactory extends Factory
             'name' => fake()->word(),
             'description' => fake()->sentence(),
             'price' => fake()->randomFloat(2, 1, 100),
-            'original_price' => fake()->randomFloat(2, 1, 100),
+            'original_price' => function ($attributes) {
+                $randInt = fake()->numberBetween(0, 1);
+                if ($randInt == 0) {
+                    return null;
+                }
+                return $attributes['price'] + fake()->randomFloat(2, 1, 100);
+            },
             'image_url' => 'https://placehold.co/400x400',
             'category_id' => Category::factory(),
             'is_featured' => fake()->boolean(),
