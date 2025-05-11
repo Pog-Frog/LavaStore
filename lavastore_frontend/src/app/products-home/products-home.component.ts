@@ -20,7 +20,7 @@ export class ProductsHomeComponent implements OnInit {
   totalPages = 1;
   categories: Category[] = [];
   filters: ProductFilters = {
-    category: undefined,
+    category: 0,
     min_price: 0,
     max_price: 100,
     dietary_preferences: [],
