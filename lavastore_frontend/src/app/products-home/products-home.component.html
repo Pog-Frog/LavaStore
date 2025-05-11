@@ -14,12 +14,14 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                             <div class="relative">
                                 <select
+                                    [(ngModel)]="filters.category"
+                                    (change)="onCategoryChange($event)"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white">
-                                    <option>All Categories</option>
-                                    <option>Powders</option>
-                                    <option>Ready-to-drink</option>
-                                    <option>Hot & Savory</option>
-                                    <option>Supplements</option>
+                                    <option [ngValue]="undefined">All Categories</option>
+                                    <option value="1">Powders</option>
+                                    <option value="2">Ready-to-drink</option>
+                                    <option value="3">Hot & Savory</option>
+                                    <option value="4">Supplements</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -32,12 +34,16 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
                             <div class="flex items-center space-x-4">
                                 <input type="range"
-                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600" min="0"
-                                    max="100" value="50">
+                                    [(ngModel)]="filters.max_price"
+                                    (change)="onPriceRangeChange(filters.min_price || 0, filters.max_price || 100)"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600"
+                                    [min]="filters.min_price"
+                                    [max]="100"
+                                    [value]="filters.max_price">
                             </div>
                             <div class="flex justify-between mt-2">
-                                <span class="text-sm text-gray-600 font-medium">$0</span>
-                                <span class="text-sm text-gray-600 font-medium">$100</span>
+                                <span class="text-sm text-gray-600 font-medium">${{filters.min_price}}</span>
+                                <span class="text-sm text-gray-600 font-medium">${{filters.max_price}}</span>
                             </div>
                         </div>
                         <div>
@@ -45,22 +51,26 @@
                             <div class="space-y-3">
                                 <div class="flex items-center">
                                     <input type="checkbox"
+                                        (change)="onDietaryPreferenceChange(1, $event)"
                                         class="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500">
                                     <label class="ml-3 text-sm text-gray-700">Vegan</label>
                                 </div>
                                 <div class="flex items-center">
                                     <input type="checkbox"
+                                        (change)="onDietaryPreferenceChange(2, $event)"
                                         class="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500">
                                     <label class="ml-3 text-sm text-gray-700">Gluten-Free</label>
                                 </div>
                                 <div class="flex items-center">
                                     <input type="checkbox"
+                                        (change)="onDietaryPreferenceChange(3, $event)"
                                         class="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500">
                                     <label class="ml-3 text-sm text-gray-700">Organic</label>
                                 </div>
                             </div>
                         </div>
                         <button
+                            (click)="applyFilters()"
                             class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -76,176 +86,45 @@
                     <h2 class="text-3xl font-bold text-gray-900">All Products</h2>
                     <div class="flex items-center space-x-2">
                         <span class="text-sm text-gray-600">Sort by:</span>
-                        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>Popularity</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
-                            <option>Newest</option>
+                        <select 
+                            [(ngModel)]="filters.sort_by"
+                            (change)="onSortChange($event)"
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="popularity">Popularity</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                            <option value="newest">Newest</option>
                         </select>
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Product 1 -->
-                    <div
+                <div *ngIf="loading" class="flex justify-center items-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                </div>
+
+                <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                    {{ error }}
+                </div>
+
+                <div *ngIf="!loading && !error" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div *ngFor="let product of products"
                         class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
                         <div class="relative">
-                            <img src="/api/placeholder/300/200" alt="Huel Powder" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                            <div
+                            <img [src]="product.image_url" [alt]="product.name" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
+                            <div *ngIf="product.original_price"
                                 class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                20% OFF
+                                {{ ((product.price - product.original_price) / product.price * 100).toFixed(0) }}% OFF
                             </div>
                         </div>
                         <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">Huel Powder v3.0</h3>
+                            <h3 class="font-bold text-gray-900 text-lg mb-2">{{ product.name }}</h3>
                             <p class="text-gray-600 text-sm mb-3">
-                                Complete meal, 400 kcal per serving
+                                {{ product.description }}
                             </p>
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <span class="text-xl font-bold text-gray-900">$29.99</span>
-                                    <span class="text-sm text-gray-500 line-through ml-2">$37.49</span>
-                                </div>
-                                <button
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 2 -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
-                        <div class="relative">
-                            <img src="/api/placeholder/300/200" alt="Huel Ready-to-drink"
-                                class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                            <div
-                                class="absolute top-3 left-3 bg-yellow-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                POPULAR
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">Huel Ready-to-drink</h3>
-                            <p class="text-gray-600 text-sm mb-3">Pre-mixed, 400ml bottle</p>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xl font-bold text-gray-900">$39.99</span>
-                                    <span class="text-sm text-gray-500 line-through ml-2">$45.99</span>
-                                </div>
-                                <button
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 3 -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
-                        <div class="relative">
-                            <img src="/api/placeholder/300/200" alt="Huel Hot & Savory" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                            <div
-                                class="absolute top-3 left-3 bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                15% OFF
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">Huel Hot & Savory</h3>
-                            <p class="text-gray-600 text-sm mb-3">Hot meals, 7 servings</p>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xl font-bold text-gray-900">$34.99</span>
-                                    <span class="text-sm text-gray-500 line-through ml-2">$41.99</span>
-                                </div>
-                                <button
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 4 -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
-                        <div class="relative">
-                            <img src="/api/placeholder/300/200" alt="Huel Complete Protein"
-                                class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                            <div
-                                class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                NEW
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">Huel Complete Protein</h3>
-                            <p class="text-gray-600 text-sm mb-3">20g protein per serving</p>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xl font-bold text-gray-900">$24.99</span>
-                                </div>
-                                <button
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 5 -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
-                        <div class="relative">
-                            <img src="/api/placeholder/300/200" alt="Huel Bars" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">Huel Bars</h3>
-                            <p class="text-gray-600 text-sm mb-3">Nutritionally complete snack</p>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xl font-bold text-gray-900">$32.99</span>
-                                    <span class="text-sm text-gray-500 line-through ml-2">$36.99</span>
-                                </div>
-                                <button
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 6 -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
-                        <div class="relative">
-                            <img src="/api/placeholder/300/200" alt="Huel Daily Greens" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                            <div
-                                class="absolute top-3 left-3 bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                BEST SELLER
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">Huel Daily Greens</h3>
-                            <p class="text-gray-600 text-sm mb-3">Vitamin and mineral blend</p>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xl font-bold text-gray-900">$27.99</span>
+                                    <span class="text-xl font-bold text-gray-900">${{ product.original_price || product.price }}</span>
+                                    <span *ngIf="product.original_price" class="text-sm text-gray-500 line-through ml-2">${{ product.price }}</span>
                                 </div>
                                 <button
                                     class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
@@ -259,13 +138,28 @@
                     </div>
                 </div>
                 
-                <div class="mt-10 flex justify-center">
+                <div *ngIf="!loading && !error && totalPages > 1" class="mt-10 flex justify-center">
                     <nav class="inline-flex rounded-md shadow">
-                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-l-md text-sm font-medium text-gray-500 hover:bg-gray-50">Previous</a>
-                        <a href="#" class="py-2 px-4 bg-green-600 border border-green-600 text-sm font-medium text-white">1</a>
-                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
-                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
-                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-r-md text-sm font-medium text-gray-500 hover:bg-gray-50">Next</a>
+                        <button 
+                            (click)="onPageChange(currentPage - 1)"
+                            [disabled]="currentPage === 1"
+                            class="py-2 px-4 bg-white border border-gray-300 rounded-l-md text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Previous
+                        </button>
+                        <button *ngFor="let page of [].constructor(totalPages); let i = index"
+                            (click)="onPageChange(i + 1)"
+                            [class.bg-green-600]="currentPage === i + 1"
+                            [class.text-white]="currentPage === i + 1"
+                            [class.border-green-600]="currentPage === i + 1"
+                            class="py-2 px-4 border border-gray-300 text-sm font-medium text-gray-700 hover:cursor-pointer">
+                            {{ i + 1 }}
+                        </button>
+                        <button 
+                            (click)="onPageChange(currentPage + 1)"
+                            [disabled]="currentPage === totalPages"
+                            class="py-2 px-4 bg-white border border-gray-300 rounded-r-md text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                        </button>
                     </nav>
                 </div>
             </div>
