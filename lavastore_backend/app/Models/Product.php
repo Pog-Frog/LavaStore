@@ -37,7 +37,6 @@ class Product extends Model
             AllowedFilter::exact('is_featured'),
             AllowedFilter::exact('badge'),
             AllowedFilter::scope('price_between'),
-            AllowedFilter::scope('has_dietary_preference'),
             AllowedFilter::callback('dietary_preferences', function ($query, $value) {
                 if (is_array($value)) {
                     foreach ($value as $preferenceId) {
