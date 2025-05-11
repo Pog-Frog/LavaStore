@@ -20,6 +20,8 @@ class ProductResource extends JsonResource
             'badge' => $this->badge,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'category' => $this->category,
+            'dietary_preferences' => $this->dietaryPreferences,
         ];
     }
 } 

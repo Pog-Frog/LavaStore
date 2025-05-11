@@ -20,16 +20,17 @@ class ProductController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $products = QueryBuilder::for(Product::class)
+        $result = QueryBuilder::for(Product::class)
             ->allowedFilters(Product::allowedFilters())
             ->allowedSorts(Product::allowedSorts())
             ->allowedIncludes(Product::allowedIncludes())
             ->paginate()
             ->appends($request->query());
+            
 
         return response()->json([
             'message' => 'Products retrieved successfully',
-            'data' => ProductResource::collection($products)
+            'data' => $result
         ]);
     }
 

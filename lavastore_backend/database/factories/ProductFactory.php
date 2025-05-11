@@ -22,7 +22,7 @@ class ProductFactory extends Factory
             'description' => fake()->sentence(),
             'price' => fake()->randomFloat(2, 1, 100),
             'original_price' => fake()->randomFloat(2, 1, 100),
-            'image_url' => 'https://placeholder.co/400x400',
+            'image_url' => 'https://placehold.co/400x400',
             'category_id' => Category::factory(),
             'is_featured' => fake()->boolean(),
             'badge' => fake()->randomElement(['NEW', 'POPULAR', 'BEST SELLER']),

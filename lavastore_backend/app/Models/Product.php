@@ -38,6 +38,15 @@ class Product extends Model
             AllowedFilter::exact('badge'),
             AllowedFilter::scope('price_between'),
             AllowedFilter::scope('has_dietary_preference'),
+            AllowedFilter::callback('dietary_preferences', function ($query, $value) {
+                if (is_array($value)) {
+                    foreach ($value as $preferenceId) {
+                        $query->whereHas('dietaryPreferences', function ($query) use ($preferenceId) {
+                            $query->where('dietary_preferences.id', $preferenceId);
+                        });
+                    }
+                }
+            }),
         ];
     }
 
@@ -77,7 +86,6 @@ class Product extends Model
 
     public function dietaryPreferences(): BelongsToMany
     {
-        return $this->belongsToMany(DietaryPreference::class, 'dietary_preference_product')
-            ->withTimestamps();
+        return $this->belongsToMany(DietaryPreference::class, 'dietary_preference_product');
     }
 }
