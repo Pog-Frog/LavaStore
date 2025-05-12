@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Repositories\ProductRepository;
 use Spatie\QueryBuilder\QueryBuilder;
 
+//TODO: Add route to get the products that will be displayed in the index page
 class ProductController extends Controller
 {
     use AuthorizesRequests;
