@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -13,8 +14,12 @@ export class HeaderComponent implements OnInit {
   isMobileMenuOpen = false;
   cartItemsCount = 0;
 
+  constructor(public cartService: CartService) {}
+
   ngOnInit(): void {
-    
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItemsCount = this.cartService.getCartItemsCount();
+    });
   }
 
   toggleMobileMenu(): void {
@@ -23,5 +28,11 @@ export class HeaderComponent implements OnInit {
 
   closeMobileMenu(): void {
     this.isMobileMenuOpen = false;
+  }
+
+  updateQuantity(productId: number, quantity: number): void {
+    if (quantity > 0) {
+      this.cartService.updateQuantity(productId, quantity);
+    }
   }
 }
