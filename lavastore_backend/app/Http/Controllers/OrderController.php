@@ -14,9 +14,9 @@ class OrderController extends Controller
 
     public function __construct(protected OrderRepository $orderRepository) {}
 
-    public function index(): JsonResponse
+    public function index(): JsonResponse // Get all orders
     {
-        $orders = $this->orderRepository->getByUser(Auth::id());
+        $orders = $this->orderRepository->getAll();
 
         return response()->json([
             'message' => 'Orders retrieved successfully',
@@ -24,7 +24,18 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(string $id): JsonResponse
+    public function getByUser(): JsonResponse // Get all orders by user ID
+    {
+        $id = Auth::id();
+        $orders = $this->orderRepository->getByUser($id);
+
+        return response()->json([
+            'message' => 'Orders retrieved successfully',
+            'data' => $orders
+        ]);
+    }
+
+    public function show(string $id): JsonResponse // Get a single order by ID
     {
         $order = $this->orderRepository->getById($id);
 
@@ -51,7 +62,7 @@ class OrderController extends Controller
         ]);
 
         $orderData = [
-            'user_id' => Auth::id(),
+            'user_id' => Auth::user()->id,
             'total' => collect($request->items)->sum(fn($item) => $item['quantity'] * $item['price'])
         ];
 

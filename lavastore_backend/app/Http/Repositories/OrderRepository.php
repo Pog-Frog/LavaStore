@@ -9,14 +9,29 @@ use Illuminate\Support\Facades\DB;
 
 class OrderRepository
 {
+    public function getAll()
+    {
+        return Order::query()
+            ->with('orderItems.product')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
     public function getById(string $id)
     {
-        return Order::query()->where('id', $id)->with('product')->first();
+        return Order::query()
+            ->where('id', $id)
+            ->with('orderItems.product')
+            ->first();
     }
 
     public function getByUser(int $userId)
     {
-        return Order::query()->where('user_id', $userId)->orderBy('created_at', 'desc')->get();
+        return Order::query()
+            ->where('user_id', $userId)
+            ->with('orderItems.product')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function create(array $data)
