@@ -69,7 +69,7 @@ export class AuthService {
         return this.currentUserSubject.value;
     }
 
-    public isLoggedIn(): boolean {
+    public isAuthenticated(): boolean {
         return !!this.currentUserSubject.value;
     }
 
