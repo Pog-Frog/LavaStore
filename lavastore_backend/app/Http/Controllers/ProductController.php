@@ -95,4 +95,14 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully'
         ]);
     }
+
+    public function getFeaturedProducts(): JsonResponse
+    {
+        $products = $this->productRepository->getFeaturedProducts();
+
+        return response()->json([
+            'message' => 'Products retrieved successfully',
+            'data' => $products
+        ]);
+    }
 }

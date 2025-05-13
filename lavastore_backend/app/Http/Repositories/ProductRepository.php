@@ -49,4 +49,8 @@ class ProductRepository {
         $product->dietaryPreferences()->detach();
         return $product->delete();
     }
+
+    public function getFeaturedProducts() {
+        return Product::query()->where('is_featured', true)->limit(4)->get();
+    }
 }
