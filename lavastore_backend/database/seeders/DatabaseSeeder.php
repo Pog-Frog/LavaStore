@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Order;
+use App\Models\OrderItem;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
@@ -26,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'User',
             'email' => 'user@lavastore.com',
             'password' => Hash::make('password'),
@@ -58,5 +60,21 @@ class DatabaseSeeder extends Seeder
                 DietaryPreference::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray()
             );
         });
+
+        $orders = Order::factory(2)->create([
+            'user_id' => $user->id,
+            'status' => 'pending',
+            'total' => 100,
+        ]);
+
+        foreach ($orders as $order) {
+            OrderItem::factory(2)->create([
+                'order_id' => $order->id,
+                'product_id' => Product::inRandomOrder()->take(1)->pluck('id')->toArray()[0],
+                'quantity' => 1,
+                'price' => Product::inRandomOrder()->take(1)->pluck('price')->toArray()[0],
+            ]);
+        }   
+
     }
 }
