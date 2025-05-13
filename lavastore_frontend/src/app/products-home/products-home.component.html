@@ -4,8 +4,10 @@
             <div class="w-full md:w-1/3 lg:w-1/4">
                 <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
                     <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>
                         Filter Products
                     </h2>
@@ -13,16 +15,18 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                             <div class="relative">
-                                <select
-                                    [(ngModel)]="filters.category"
-                                    (change)="onCategoryChange($event)"
+                                <select [(ngModel)]="filters.category" (change)="onCategoryChange($event)"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white">
                                     <option [ngValue]="0">All Categories</option>
-                                    <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+                                    <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name
+                                        }}</option>
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path
+                                            d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                                     </svg>
                                 </div>
                             </div>
@@ -30,13 +34,10 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
                             <div class="flex items-center space-x-4">
-                                <input type="range"
-                                    [(ngModel)]="filters.max_price"
+                                <input type="range" [(ngModel)]="filters.max_price"
                                     (change)="onPriceRangeChange(filters.min_price || 0, filters.max_price || 100)"
                                     class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600"
-                                    [min]="filters.min_price"
-                                    [max]="100"
-                                    [value]="filters.max_price">
+                                    [min]="filters.min_price" [max]="100" [value]="filters.max_price">
                             </div>
                             <div class="flex justify-between mt-2">
                                 <span class="text-sm text-gray-600 font-medium">${{filters.min_price}}</span>
@@ -47,30 +48,28 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Dietary Preferences</label>
                             <div class="space-y-3">
                                 <div class="flex items-center">
-                                    <input type="checkbox"
-                                        (change)="onDietaryPreferenceChange(1, $event)"
+                                    <input type="checkbox" (change)="onDietaryPreferenceChange(1, $event)"
                                         class="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500">
                                     <label class="ml-3 text-sm text-gray-700">Vegan</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox"
-                                        (change)="onDietaryPreferenceChange(2, $event)"
+                                    <input type="checkbox" (change)="onDietaryPreferenceChange(2, $event)"
                                         class="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500">
                                     <label class="ml-3 text-sm text-gray-700">Gluten-Free</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox"
-                                        (change)="onDietaryPreferenceChange(3, $event)"
+                                    <input type="checkbox" (change)="onDietaryPreferenceChange(3, $event)"
                                         class="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500">
                                     <label class="ml-3 text-sm text-gray-700">Organic</label>
                                 </div>
                             </div>
                         </div>
-                        <button
-                            (click)="applyFilters()"
+                        <button (click)="applyFilters()"
                             class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                             </svg>
                             Apply Filters
                         </button>
@@ -83,9 +82,7 @@
                     <h2 class="text-3xl font-bold text-gray-900">All Products</h2>
                     <div class="flex items-center space-x-2">
                         <span class="text-sm text-gray-600">Sort by:</span>
-                        <select 
-                            [(ngModel)]="filters.sort_by"
-                            (change)="onSortChange($event)"
+                        <select [(ngModel)]="filters.sort_by" (change)="onSortChange($event)"
                             class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="popularity">Popularity</option>
                             <option value="price_asc">Price: Low to High</option>
@@ -94,7 +91,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div *ngIf="loading" class="flex justify-center items-center py-12">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
                 </div>
@@ -105,57 +102,68 @@
 
                 <div *ngIf="!loading && !error" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div *ngFor="let product of products"
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
+                        class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col h-full">
                         <div class="relative">
-                            <img [src]="product.image_url" [alt]="product.name" class="w-full h-56 object-cover transition-transform group-hover:scale-105" />
-                            <div *ngIf="product.original_price"
-                                class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                                {{ ((product.original_price - product.price) / product.original_price * 100).toFixed(0) }}% OFF
-                            </div>
+                            <img [src]="product.image_url" [alt]="product.name"
+                                class="w-full h-40 sm:h-48 object-cover" />
+                            <ng-container [ngSwitch]="product.badge">
+                                <div *ngSwitchCase="'NEW'"
+                                    class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                    NEW
+                                </div>
+                                <div *ngSwitchCase="'POPULAR'"
+                                    class="absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                    POPULAR
+                                </div>
+                                <div *ngSwitchCase="'BEST SELLER'"
+                                    class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                    BEST SELLER
+                                </div>
+                                <div *ngSwitchDefault>
+                                    <div *ngIf="product.original_price > product.price"
+                                        class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                        {{ ((product.original_price - product.price) / product.original_price *
+                                        100).toFixed(0) }}% OFF
+                                    </div>
+                                </div>
+                            </ng-container>
                         </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-gray-900 text-lg mb-2">{{ product.name }}</h3>
-                            <p class="text-gray-600 text-sm mb-3">
+                        <div class="p-3 sm:p-4 flex flex-col flex-grow">
+                            <h3 class="font-semibold text-gray-900 text-sm sm:text-base mb-1">{{ product.name }}</h3>
+                            <p class="text-gray-500 text-xs sm:text-sm mb-2 flex-grow">
                                 {{ product.description }}
                             </p>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xl font-bold text-gray-900">${{ product.price || product.original_price }}</span>
-                                    <span *ngIf="product.original_price" class="text-sm text-gray-500 line-through ml-2">${{ product.original_price }}</span>
+                            <div class="flex items-center justify-between mt-auto">
+                                <div class="flex items-center flex-wrap">
+                                    <span class="text-base sm:text-lg font-bold text-gray-900">${{ product.price
+                                        }}</span>
+                                    <span *ngIf="product.original_price"
+                                        class="text-xs sm:text-sm text-gray-500 line-through ml-2">${{
+                                        product.original_price }}</span>
                                 </div>
                                 <button
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
+                                    class="bg-green-600 hover:bg-green-700 text-white px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap">
                                     Add to Cart
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div *ngIf="!loading && !error && totalPages > 1" class="mt-10 flex justify-center">
                     <nav class="inline-flex rounded-md shadow">
-                        <button 
-                            (click)="onPageChange(currentPage - 1)"
-                            [disabled]="currentPage === 1"
+                        <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1"
                             class="py-2 px-4 bg-white border border-gray-300 rounded-l-md text-sm font-medium text-gray-500 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
                             Previous
                         </button>
                         <button *ngFor="let page of [].constructor(totalPages); let i = index"
-                            (click)="onPageChange(i + 1)"
-                            [class.bg-green-600]="currentPage === i + 1"
-                            [class.text-white]="currentPage === i + 1"
-                            [class.border-green-600]="currentPage === i + 1"
+                            (click)="onPageChange(i + 1)" [class.bg-green-600]="currentPage === i + 1"
+                            [class.text-white]="currentPage === i + 1" [class.border-green-600]="currentPage === i + 1"
                             class="py-2 px-4 border border-gray-300 text-sm font-medium text-gray-700 hover:cursor-pointer hover:bg-gray-200 hover:scale-105 transition-all duration-300"
-                            [class.hover:bg-green-600]="currentPage === i + 1"
-                            >
+                            [class.hover:bg-green-600]="currentPage === i + 1">
                             {{ i + 1 }}
                         </button>
-                        <button 
-                            (click)="onPageChange(currentPage + 1)"
-                            [disabled]="currentPage === totalPages"
+                        <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages"
                             class="py-2 px-4 bg-white border border-gray-300 rounded-r-md text-sm font-medium text-gray-500 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
                             Next
                         </button>
