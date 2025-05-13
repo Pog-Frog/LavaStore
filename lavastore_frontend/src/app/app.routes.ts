@@ -4,10 +4,12 @@ import { SignupComponent } from './signup/signup.component';
 import { SigninComponent } from './signin/signin.component';
 import { ProductsHomeComponent } from './products-home/products-home.component';
 import { authGuard } from './guards/auth.guard';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 export const routes: Routes = [
     { path: '', component: BaseComponent },
     { path: 'auth/signup', component: SignupComponent },
     { path: 'auth/signin', component: SigninComponent },
     { path: 'products', component: ProductsHomeComponent, canActivate: [authGuard] },
+    { path: 'checkout', component: CheckoutComponent },
 ];

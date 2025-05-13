@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   constructor(public cartService: CartService) {}
 
   ngOnInit(): void {
-    this.cartService.cartItems$.subscribe(items => {
+    this.cartService.getCartItemsObservable().subscribe(items => {
       this.cartItemsCount = this.cartService.getCartItemsCount();
     });
   }

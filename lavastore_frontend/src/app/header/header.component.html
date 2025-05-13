@@ -176,7 +176,7 @@
   </div>
 
   <div
-    *ngIf="cartService.showCartModal$ | async"
+    *ngIf="cartService.getShowCartModal() | async"
     class="fixed inset-0 bg-black/50 z-50 flex justify-end transition-opacity duration-300"
     (click)="cartService.toggleCartModal()"
   >
@@ -210,7 +210,7 @@
 
       <div class="p-4">
         <div
-          *ngIf="(cartService.cartItems$ | async)?.length === 0"
+          *ngIf="(cartService.getCartItemsObservable() | async)?.length === 0"
           class="text-center py-10"
         >
           <svg
@@ -241,11 +241,11 @@
         </div>
 
         <div
-          *ngIf="(cartService.cartItems$ | async)!.length > 0"
+          *ngIf="(cartService.getCartItemsObservable() | async)!.length > 0"
           class="space-y-4"
         >
           <div
-            *ngFor="let item of (cartService.cartItems$ | async)!"
+            *ngFor="let item of (cartService.getCartItemsObservable() | async)!"
             class="flex space-x-4 border border-gray-100 rounded-lg p-3 hover:bg-gray-50 transition-colors"
           >
             <img
@@ -262,7 +262,7 @@
             <div class="flex items-center gap-2">
               <div class="flex items-center border border-gray-200 rounded-md">
                 <button
-                  (click)="updateQuantity(item.product_id, item.quantity - 1)"
+                  (click)="updateQuantity(item.product.id, item.quantity - 1)"
                   [disabled]="item.quantity <= 1"
                   class="text-gray-500 hover:text-black disabled:opacity-50 px-2 py-1"
                 >
@@ -282,7 +282,7 @@
                 </button>
                 <span class="w-8 text-center">{{ item.quantity }}</span>
                 <button
-                  (click)="updateQuantity(item.product_id, item.quantity + 1)"
+                  (click)="updateQuantity(item.product.id, item.quantity + 1)"
                   class="text-gray-500 hover:text-black px-2 py-1"
                 >
                   <svg
@@ -301,7 +301,7 @@
                 </button>
               </div>
               <button
-                (click)="cartService.removeFromCart(item.product_id)"
+                (click)="cartService.removeFromCart(item.product.id)"
                 class="text-red-500 hover:text-red-700 ml-1 p-1"
               >
                 <svg
@@ -327,6 +327,8 @@
               <span>${{ cartService.getCartTotal() }}</span>
             </div>
             <button
+              routerLink="/checkout"
+              (click)="cartService.toggleCartModal()"
               class="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors transform hover:scale-[1.01]"
             >
               Checkout
