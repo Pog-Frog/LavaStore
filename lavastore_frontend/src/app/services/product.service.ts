@@ -66,4 +66,8 @@ export class ProductService {
 
     return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
   }
+
+  getHomePageProducts(): Observable<{ message: string; data: Product[] }> {
+    return this.http.get<{ message: string; data: Product[] }>(`${this.apiUrl}/featured`);
+  }
 } 

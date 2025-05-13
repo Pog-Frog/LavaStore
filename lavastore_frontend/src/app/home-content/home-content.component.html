@@ -77,9 +77,9 @@
       </p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Product 1 -->
-      <div
+    <!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"> -->
+    <!-- Product 1 -->
+    <!-- <div
         class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
         <div class="relative">
           <img src="/api/placeholder/300/200" alt="Huel Powder" class="w-full h-48 object-cover" />
@@ -103,10 +103,10 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <!-- Product 2 -->
-      <div
+    <!-- Product 2 -->
+    <!-- <div
         class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
         <div class="relative">
           <img src="/api/placeholder/300/200" alt="Huel Ready-to-drink" class="w-full h-48 object-cover" />
@@ -128,10 +128,10 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <!-- Product 3 -->
-      <div
+    <!-- Product 3 -->
+    <!-- <div
         class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
         <div class="relative">
           <img src="/api/placeholder/300/200" alt="Huel Hot & Savory" class="w-full h-48 object-cover" />
@@ -153,10 +153,10 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <!-- Product 4 -->
-      <div
+    <!-- Product 4 -->
+    <!-- <div
         class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
         <div class="relative">
           <img src="/api/placeholder/300/200" alt="Huel Complete Protein" class="w-full h-48 object-cover" />
@@ -178,6 +178,65 @@
               class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors">
               Add to Cart
             </button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div *ngIf="loading" class="col-span-full flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+    </div>
+
+    <div *ngIf="error" class="col-span-full bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let product of products"
+          class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col h-full">
+          <div class="relative">
+            <img [src]="product.image_url" [alt]="product.name" class="w-full h-48 object-cover" />
+            <ng-container [ngSwitch]="product.badge">
+
+              <div *ngSwitchCase="'NEW'"
+                class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                NEW
+              </div>
+
+              <div *ngSwitchCase="'POPULAR'"
+                class="absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                POPULAR
+              </div>
+
+              <div *ngSwitchCase="'BEST SELLER'"
+                class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                BEST SELLER
+              </div>
+
+              <div *ngSwitchDefault>
+                <div *ngIf="product.original_price > product.price"
+                  class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                  {{ ((product.original_price - product.price) / product.original_price * 100).toFixed(0) }}% OFF
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="p-3 sm:p-4 flex flex-col flex-grow">
+            <h3 class="font-semibold text-gray-900 text-sm sm:text-base mb-1">{{ product.name }}</h3>
+            <p class="text-gray-500 text-xs sm:text-sm mb-2 flex-grow">
+              {{ product.description }}
+            </p>
+            <div class="flex items-center justify-between mt-auto">
+              <div>
+                <span class="text-lg font-bold text-gray-900">${{ product.price }}</span>
+                <span *ngIf="product.original_price" class="text-sm text-gray-500 line-through ml-2">${{
+                  product.original_price }}</span>
+              </div>
+              <button
+                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors">
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       </div>
