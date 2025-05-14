@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HomeComponent } from '../layouts/home/home.component';
 import { AuthService } from '../services/auth.service';
+
 @Component({
     selector: 'app-checkout',
     standalone: true,
@@ -85,25 +86,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             product_id: item.product.id,
             quantity: item.quantity,
             price: item.price,
-            user_id: this.authService.currentUserValue?.id
         }));
 
         const orderData = {
             items: cartItems
         };
 
-        // Send order to backend
         this.http.post(`${environment.apiUrl}/orders`, orderData)
             .subscribe({
                 next: (response: any) => {
                     this.loading = false;
                     this.cartService.clearCart();
-                    // Redirect to success page or show success message
-                    console.log('Order placed successfully:', response);
+                    // this.router.navigate(['/orders']);
                 },
                 error: (error) => {
                     this.loading = false;
-                    this.error = error.error?.message || 'Failed to place order. Please try again.';
+                    console.error('Error placing order:', error);
                 }
             });
     }
