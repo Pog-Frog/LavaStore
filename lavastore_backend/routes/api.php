@@ -15,13 +15,6 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/dietary-preferences', [DietaryPreferenceController::class, 'index']);
 Route::get('/dietary-preferences/{id}', [DietaryPreferenceController::class, 'show']);
 
-Route::get('/orders', [OrderController::class, 'index']);
-Route::get('/orders/{id}', [OrderController::class, 'show']);
-Route::get('/orders/user', [OrderController::class, 'getByUser']);
-Route::post('/orders', [OrderController::class, 'store']);
-Route::put('/orders/{id}', [OrderController::class, 'update']);
-Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
-Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('products', [ProductController::class, 'store']);
@@ -35,6 +28,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('dietary-preferences', [DietaryPreferenceController::class, 'store']);
     Route::put('dietary-preferences/{id}', [DietaryPreferenceController::class, 'update']);
     Route::delete('dietary-preferences/{id}', [DietaryPreferenceController::class, 'destroy']);
+
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::post('orders/{id}', [OrderController::class, 'show']);
+    Route::get('orders/user', [OrderController::class, 'getByUser']);
+    Route::post('orders', [OrderController::class, 'store']);
+    Route::put('orders/{id}', [OrderController::class, 'update']);
+    Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
+    Route::delete('orders/{id}', [OrderController::class, 'destroy']);
 });
 
 Route::post('login', [AuthController::class, 'login']);

@@ -62,7 +62,7 @@ class OrderController extends Controller
         ]);
 
         $orderData = [
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'total' => collect($request->items)->sum(fn($item) => $item['quantity'] * $item['price'])
         ];
 
