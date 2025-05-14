@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HomeComponent } from '../layouts/home/home.component';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
+
 
 @Component({
     selector: 'app-checkout',
@@ -27,7 +29,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         public cartService: CartService,
         private fb: FormBuilder,
         private http: HttpClient,
-        private authService: AuthService
+        private authService: AuthService,
+        private notificationService: NotificationService,
+        private router: Router
     ) {
         this.formData = this.fb.group({
             // firstName: ['', Validators.required],
@@ -70,12 +74,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         if (this.formData.invalid) {
-            this.error = 'Please fill in all required fields';
+            this.notificationService.showError('Please fill in all required fields');
             return;
         }
 
         if (this.cartService.getCartTotal() === 0) {
-            this.error = 'Your cart is empty';
+            this.notificationService.showError('Your cart is empty');
             return;
         }
 
@@ -97,11 +101,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 next: (response: any) => {
                     this.loading = false;
                     this.cartService.clearCart();
-                    // this.router.navigate(['/orders']);
+                    this.notificationService.showSuccess('Order placed successfully');
+                    this.router.navigate(['/products']);
                 },
                 error: (error) => {
                     this.loading = false;
-                    console.error('Error placing order:', error);
+                    this.notificationService.showError('Error placing order');
                 }
             });
     }
