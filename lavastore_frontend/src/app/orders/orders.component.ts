@@ -39,11 +39,7 @@ export class OrdersComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        if (err.status === 401) {
-          this.notificationService.showError('You need to be logged in to view your orders. Please go to Sign In page.');
-        } else {
-          this.notificationService.showError('Failed to load your orders. Please try again later.');
-        }
+        this.notificationService.showError('Failed to load your orders. Please try again later.');
         this.loading = false;
         console.error('Error fetching orders:', err);
       }

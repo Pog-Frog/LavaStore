@@ -65,14 +65,8 @@ export class ProductsHomeComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-
-        if (error.status === 401) {
-          this.notificationService.showError('You must be logged in to view products');
-          this.router.navigate(['/auth/signin']);
-        } else {
-          this.error = 'Failed to load products. Please try again later.';
-          console.error('Error loading products:', error);
-        }
+        this.error = 'Failed to load products. Please try again later.';
+        console.error('Error loading products:', error);
       }
     });
   }
@@ -83,13 +77,8 @@ export class ProductsHomeComponent implements OnInit {
         this.categories = response.data;
       },
       error: (error) => {
-        if (error.status === 401) {
-          this.notificationService.showError('You must be logged in to view categories');
-          this.router.navigate(['/auth/signin']);
-        } else {
-          this.notificationService.showError('Error loading categories');
-          console.error('Error loading categories:', error);
-        }
+        this.error = 'Failed to load categories. Please try again later.';
+        console.error('Error loading categories:', error);
       }
     });
   }

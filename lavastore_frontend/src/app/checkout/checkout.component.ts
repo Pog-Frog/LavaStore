@@ -105,12 +105,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 },
                 error: (error) => {
                     this.loading = false;
-                    if(error.status === 401) {
-                        this.notificationService.showError('You must be logged in to place an order');
-                        this.router.navigate(['/auth/signin']);
-                    } else {
-                        this.notificationService.showError('Error placing order');
-                    }
+                    this.notificationService.showError('Error placing order');
                 }
             });
     }
