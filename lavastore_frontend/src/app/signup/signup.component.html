@@ -36,6 +36,14 @@
                 required minlength="8" />
         </div>
 
+        <!-- Profile Picture -->
+        <div>
+            <label for="profile_picture" class="block text-sm font-medium text-gray-700 mb-1">Profile Picture (Optional)</label>
+            <input type="file" id="profile_picture" name="profile_picture" (change)="onFileSelected($event)"
+                accept="image/png, image/jpeg, image/gif"
+                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" />
+        </div>
+
         <!-- Submit button -->
         <div>
             <button type="submit" [disabled]="form.invalid || isLoading"

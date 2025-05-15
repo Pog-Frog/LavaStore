@@ -77,12 +77,17 @@
           <!-- Logged in user -->
           <div *ngIf="isLoggedIn" class="relative user-dropdown-container">
             <button 
-              (click)="toggleUserDropdown()"
-              class="flex items-center text-gray-600 hover:text-black transition-colors duration-200 p-1.5 rounded-full hover:bg-gray-100"
+              (click)="toggleUserDropdown($event)" 
+              class="flex items-center text-gray-600 hover:text-black transition-colors duration-200 p-0.5 rounded-full hover:bg-gray-100"
             >
-              <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium">
-                {{ currentUser?.name!.charAt(0).toUpperCase() }}
+              <div *ngIf="currentUser?.profile_picture_url; else initials" class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                <img [src]="baseUrl + currentUser?.profile_picture_url" alt="Profile Picture" class="h-full w-full object-cover">
               </div>
+              <ng-template #initials>
+                <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium">
+                  {{ currentUser?.name!.charAt(0).toUpperCase() }}
+                </div>
+              </ng-template>
               <svg
                 class="h-4 w-4 ml-1"
                 xmlns="http://www.w3.org/2000/svg"

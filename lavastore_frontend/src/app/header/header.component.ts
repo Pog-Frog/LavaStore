@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { AuthService, User } from '../services/auth.service';
 import { Subscription } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isAdmin = false;
   currentUser: User | null = null;
+  baseUrl = environment.storageUrl;
   
   private authSubscription: Subscription | null = null;
 

@@ -8,6 +8,7 @@ export interface User {
     name: string;
     email: string;
     is_admin: boolean;
+    profile_picture_url?: string | null;
 }
 
 export interface AuthResponse {
@@ -52,11 +53,23 @@ export class AuthService {
             );
     }
 
-    register(name: string, email: string, password: string): Observable<AuthResponse> {
+    register(name: string, email: string, password: string, profilePicture?: File | null): Observable<AuthResponse> {
         const registerUrl = `${environment.apiUrl}/register`;
-        const userData = { name, email, password };
+        
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('password', password);
+        if (profilePicture) {
+            formData.append('profile_picture', profilePicture);
+        }
 
-        return this.http.post<AuthResponse>(registerUrl, userData);
+        return this.http.post<AuthResponse>(registerUrl, formData)
+            .pipe(
+                tap(response => {
+                    this.handleAuthentication(response);
+                })
+            );
     }
 
     logout(): void {

@@ -14,6 +14,7 @@ import { AuthComponent } from "../layouts/auth/auth.component";
 export class SignupComponent {
   isLoading = false;
   error: string | null = null;
+  selectedFile: File | null = null;
 
   constructor(
     private authService: AuthService, private router: Router) { }
@@ -37,6 +38,16 @@ export class SignupComponent {
     password_confirmation: new FormControl('', [Validators.required])
   }, { validators: this.passwordMatchValidator });
 
+  onFileSelected(event: Event): void {
+    const element = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = element.files;
+    if (fileList && fileList.length > 0) {
+      this.selectedFile = fileList[0];
+    } else {
+      this.selectedFile = null;
+    }
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;
@@ -44,7 +55,7 @@ export class SignupComponent {
 
       const { name, email, password } = this.form.value;
 
-      this.authService.register(name!, email!, password!).subscribe({
+      this.authService.register(name!, email!, password!, this.selectedFile).subscribe({
         next: () => {
           this.router.navigate(['/auth/signin']);
         },
