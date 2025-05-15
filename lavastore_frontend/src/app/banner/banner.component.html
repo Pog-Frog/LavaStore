@@ -1,32 +1,46 @@
-<section class="overflow-hidden">
+<section class="overflow-hidden mb-8">
   <div class="container">
-    <div class="relative bg-gray-50 rounded-xl p-6 md:p-10 overflow-hidden">
+    <div
+      class="relative bg-gradient-to-br from-white to-gray-100 rounded-2xl p-6 md:p-10 overflow-hidden shadow-lg border border-gray-100"
+    >
+      <div class="absolute top-0 right-0 w-64 h-64 bg-green-100 rounded-full opacity-50 -mr-20 -mt-20 blur-xl"></div>
+      <div class="absolute bottom-0 left-0 w-80 h-80 bg-yellow-100 rounded-full opacity-40 -ml-28 -mb-28 blur-xl"></div>
+      
       <div class="flex flex-col lg:flex-row items-center">
         <div class="w-full lg:w-1/2 lg:pr-12 mb-8 lg:mb-0 z-10">
           <span
-            class="inline-block bg-yellow-100 text-yellow-800 font-medium px-4 py-1 rounded-full text-sm mb-4"
+            class="inline-block bg-yellow-100 text-yellow-800 font-medium px-5 py-1.5 rounded-full text-sm mb-5 shadow-sm transform hover:scale-105 transition-transform"
             >NEW CUSTOMER OFFER</span
           >
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Complete nutrition <br class="hidden md:block" />
-            <span class="text-green-600">in a convenient format</span>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            Complete nutrition 
+            <br class="hidden md:block" />
+            <span class="text-green-600 relative">
+              in a convenient format
+              <svg class="absolute -bottom-2 left-0 w-full h-2 text-green-300" viewBox="0 0 100 15" preserveAspectRatio="none">
+                <path d="M0,5 Q50,15 100,5" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+              </svg>
+            </span>
           </h1>
-          <p class="text-gray-600 text-lg mb-6">
-            Nutritionally complete food with protein, carbs, fats, fiber, and
-            all 26 essential vitamins and minerals.
+          <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+            Nutritionally complete food with protein, carbs, fats, fiber,
+            and all 26 essential vitamins and minerals to fuel your day.
           </p>
-          <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          <div class="flex flex-col sm:flex-row gap-4 mb-8">
             <a
               href="#"
-              class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full text-center transition-colors"
+              class="px-8 py-3.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full text-center transition-all shadow-md hover:shadow-lg transform hover:scale-[1.02] flex items-center justify-center"
             >
               Shop All Products
+              <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
             </a>
           </div>
 
           <div class="flex flex-wrap gap-4 md:gap-6">
-            <div class="flex items-center">
-              <div class="bg-white rounded-full p-2 shadow-sm mr-2">
+            <div class="flex items-center bg-white bg-opacity-80 rounded-xl px-4 py-2 shadow-sm transform hover:scale-105 transition-transform">
+              <div class="bg-green-100 rounded-full p-2 mr-3">
                 <svg
                   class="w-5 h-5 text-green-600"
                   fill="none"
@@ -42,10 +56,10 @@
                   ></path>
                 </svg>
               </div>
-              <span class="text-sm text-gray-700">Vegan</span>
+              <span class="text-sm font-medium text-gray-700">100% Vegan</span>
             </div>
-            <div class="flex items-center">
-              <div class="bg-white rounded-full p-2 shadow-sm mr-2">
+            <div class="flex items-center bg-white bg-opacity-80 rounded-xl px-4 py-2 shadow-sm transform hover:scale-105 transition-transform">
+              <div class="bg-green-100 rounded-full p-2 mr-3">
                 <svg
                   class="w-5 h-5 text-green-600"
                   fill="none"
@@ -61,12 +75,10 @@
                   ></path>
                 </svg>
               </div>
-              <span class="text-sm text-gray-700"
-                >No artificial sweeteners</span
-              >
+              <span class="text-sm font-medium text-gray-700">No artificial sweeteners</span>
             </div>
-            <div class="flex items-center">
-              <div class="bg-white rounded-full p-2 shadow-sm mr-2">
+            <div class="flex items-center bg-white bg-opacity-80 rounded-xl px-4 py-2 shadow-sm transform hover:scale-105 transition-transform">
+              <div class="bg-green-100 rounded-full p-2 mr-3">
                 <svg
                   class="w-5 h-5 text-green-600"
                   fill="none"
@@ -82,16 +94,33 @@
                   ></path>
                 </svg>
               </div>
-              <span class="text-sm text-gray-700">Low in sugar</span>
+              <span class="text-sm font-medium text-gray-700">Low in sugar</span>
             </div>
           </div>
         </div>
 
-        <div class="w-full lg:w-1/2 flex justify-center">
+        <div class="w-full lg:w-1/2 flex justify-center relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-green-200 to-yellow-100 rounded-full blur-lg opacity-70 transform scale-90"></div>
+          
           <img
             src="banner_1.avif"
-            class="rounded-lg w-120  relative z-10 "
+            class="rounded-2xl w-120 relative z-10 shadow-xl transform hover:scale-[1.02] transition-transform duration-500 object-cover"
+            alt="Nutritional products showcase"
           />
+          
+          <div class="absolute top-6 right-6 bg-white bg-opacity-80 backdrop-blur-sm rounded-lg p-3 shadow-lg z-20 hidden md:block">
+            <div class="flex items-center space-x-2">
+              <div class="text-xs font-bold text-gray-500">PROTEIN</div>
+              <div class="text-sm font-bold text-green-600">26g</div>
+            </div>
+          </div>
+          
+          <div class="absolute bottom-6 left-6 bg-white bg-opacity-80 backdrop-blur-sm rounded-lg p-3 shadow-lg z-20 hidden md:block">
+            <div class="flex items-center space-x-2">
+              <div class="text-xs font-bold text-gray-500">VITAMINS</div>
+              <div class="text-sm font-bold text-green-600">26</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
