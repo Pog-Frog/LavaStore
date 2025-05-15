@@ -29,7 +29,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         public cartService: CartService,
         private fb: FormBuilder,
         private http: HttpClient,
-        private authService: AuthService,
         private notificationService: NotificationService,
         private router: Router
     ) {
@@ -106,7 +105,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 },
                 error: (error) => {
                     this.loading = false;
-                    this.notificationService.showError('Error placing order');
+                    if(error.status === 401) {
+                        this.notificationService.showError('You must be logged in to place an order');
+                        this.router.navigate(['/auth/signin']);
+                    } else {
+                        this.notificationService.showError('Error placing order');
+                    }
                 }
             });
     }

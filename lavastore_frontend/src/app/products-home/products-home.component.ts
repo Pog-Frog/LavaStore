@@ -6,11 +6,13 @@ import { Category, Product, ProductFilters } from '../models/product.interface';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../services/category.service';
 import { CartService } from '../services/cart.service';
+import { RouterModule, Router } from '@angular/router';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-products-home',
   standalone: true,
-  imports: [CommonModule, HomeComponent, FormsModule],
+  imports: [CommonModule, HomeComponent, FormsModule, RouterModule],
   templateUrl: './products-home.component.html',
   styleUrl: './products-home.component.css'
 })
@@ -22,7 +24,7 @@ export class ProductsHomeComponent implements OnInit {
   totalPages = 1;
   categories: Category[] = [];
   showMobileFilters = false;
-  
+
   filters: ProductFilters = {
     category: 0,
     min_price: 0,
@@ -34,10 +36,12 @@ export class ProductsHomeComponent implements OnInit {
   };
 
   constructor(
-    private productService: ProductService, 
+    private productService: ProductService,
     private categoryService: CategoryService,
-    private cartService: CartService
-  ) {}
+    private cartService: CartService,
+    private notificationService: NotificationService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -54,15 +58,21 @@ export class ProductsHomeComponent implements OnInit {
         this.totalPages = response.data.last_page;
         this.currentPage = response.data.current_page;
         this.loading = false;
-        
+
         if (window.innerWidth < 768) {
           this.showMobileFilters = false;
         }
       },
       error: (error) => {
-        this.error = 'Failed to load products. Please try again later.';
         this.loading = false;
-        console.error('Error loading products:', error);
+
+        if (error.status === 401) {
+          this.notificationService.showError('You must be logged in to view products');
+          this.router.navigate(['/auth/signin']);
+        } else {
+          this.error = 'Failed to load products. Please try again later.';
+          console.error('Error loading products:', error);
+        }
       }
     });
   }
@@ -71,6 +81,15 @@ export class ProductsHomeComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (response) => {
         this.categories = response.data;
+      },
+      error: (error) => {
+        if (error.status === 401) {
+          this.notificationService.showError('You must be logged in to view categories');
+          this.router.navigate(['/auth/signin']);
+        } else {
+          this.notificationService.showError('Error loading categories');
+          console.error('Error loading categories:', error);
+        }
       }
     });
   }
@@ -111,7 +130,7 @@ export class ProductsHomeComponent implements OnInit {
       this.currentPage = page;
       this.filters.page = page;
       this.loadProducts();
-      
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
@@ -124,7 +143,7 @@ export class ProductsHomeComponent implements OnInit {
   addToCart(product: Product): void {
     this.cartService.addToCart(product);
   }
-  
+
   toggleFilters(): void {
     this.showMobileFilters = !this.showMobileFilters;
   }
@@ -139,13 +158,13 @@ export class ProductsHomeComponent implements OnInit {
       page: 1,
       per_page: 6
     };
-    
+
     this.loadProducts();
   }
-  
+
   getPaginationRange(): number[] {
     const range: number[] = [];
-    
+
     if (this.totalPages <= 5) {
       for (let i = 1; i <= this.totalPages; i++) {
         range.push(i);
@@ -154,19 +173,19 @@ export class ProductsHomeComponent implements OnInit {
       // For many pages, show limited range with current page in center
       let start = Math.max(1, this.currentPage - 1);
       let end = Math.min(this.totalPages, this.currentPage + 1);
-      
+
       // Adjust the range if we're at the beginning or end
       if (this.currentPage <= 2) {
         end = 3;
       } else if (this.currentPage >= this.totalPages - 1) {
         start = this.totalPages - 2;
       }
-      
+
       for (let i = start; i <= end; i++) {
         range.push(i);
       }
     }
-    
+
     return range;
   }
 }

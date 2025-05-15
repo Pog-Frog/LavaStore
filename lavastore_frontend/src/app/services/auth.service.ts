@@ -70,7 +70,7 @@ export class AuthService {
     }
 
     public isAuthenticated(): boolean {
-        return !!this.currentUserSubject.value;
+        return !!this.currentUserSubject.value && !!localStorage.getItem('token');
     }
 
     public isAdmin(): boolean {
