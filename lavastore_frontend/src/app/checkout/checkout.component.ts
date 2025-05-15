@@ -101,7 +101,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     this.loading = false;
                     this.cartService.clearCart();
                     this.notificationService.showSuccess('Order placed successfully');
-                    this.router.navigate(['/products']);
+                    this.router.navigate(['/orders']);
                 },
                 error: (error) => {
                     this.loading = false;
