@@ -36,6 +36,8 @@ export class AdminLayoutComponent implements OnInit {
         this.router.navigate(['/auth/signin']);
       }
     });
+
+    document.addEventListener('click', this.closeProfileMenuOnClickOutside.bind(this));
   }
 
   toggleSidebar(): void {
@@ -48,6 +50,14 @@ export class AdminLayoutComponent implements OnInit {
 
   toggleProfileMenu(): void {
     this.profileMenuOpen = !this.profileMenuOpen;
+  }
+
+  closeProfileMenuOnClickOutside(event: Event): void { 
+    const profileMenu = document.querySelector('.profile-menu');
+    
+    if(profileMenu && !profileMenu.contains(event.target as Node)) {
+      this.profileMenuOpen = false;
+    }
   }
 
   logout(): void {
