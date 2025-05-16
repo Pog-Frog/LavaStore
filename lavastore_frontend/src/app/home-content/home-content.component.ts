@@ -14,6 +14,12 @@ export class HomeContentComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
+  faq1Open = false;
+  faq2Open = false;
+  faq3Open = false;
+  faq4Open = false;
+  faq5Open = false;
+
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {

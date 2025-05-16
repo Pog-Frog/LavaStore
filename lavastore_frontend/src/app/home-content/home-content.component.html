@@ -248,10 +248,14 @@
   </div>
 </section>
 
-<section class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
+<section class="py-16 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-72 h-72 bg-green-100 rounded-full opacity-30 blur-xl -mr-20 -mt-20"></div>
+  <div class="absolute bottom-0 left-0 w-80 h-80 bg-yellow-100 rounded-full opacity-30 blur-xl -ml-28 -mb-28"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">
+      <span class="inline-block bg-green-100 text-green-800 font-medium px-5 py-1.5 rounded-full text-sm mb-4 shadow-sm transform hover:scale-105 transition-transform">GOT QUESTIONS?</span>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
         Frequently Asked Questions
       </h2>
       <p class="text-gray-600 max-w-2xl mx-auto">
@@ -259,53 +263,139 @@
       </p>
     </div>
 
-    <div class="max-w-3xl mx-auto">
-      <div class="bg-white rounded-lg shadow-md mb-4">
-        <button class="flex justify-between items-center w-full p-5 text-left">
+    <div class="max-w-3xl mx-auto space-y-5">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md" 
+           [ngClass]="{'shadow-md': faq1Open}">
+        <button (click)="faq1Open = !faq1Open" 
+                class="flex justify-between items-center w-full p-5 text-left focus:outline-none">
           <span class="font-semibold text-gray-900">How do I use a promotion code?</span>
-          <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
+          <div class="bg-green-50 rounded-full p-1 transition-transform duration-300" 
+               [ngClass]="{'rotate-180': faq1Open}">
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
         </button>
-        <div class="px-5 pb-5">
-          <p class="text-gray-600">
-            Enter the promotion code at checkout in the "Discount Code" field.
-            Click "Apply" and the discount will be automatically applied to your
-            order if eligible.
-          </p>
+        <div class="overflow-hidden transition-all max-h-0 duration-300" 
+             [ngClass]="{'max-h-40': faq1Open}">
+          <div class="px-5 pb-5 bg-gradient-to-r from-green-50 to-transparent border-l-4 border-green-500">
+            <p class="text-gray-600">
+              Enter the promotion code at checkout in the "Discount Code" field.
+              Click "Apply" and the discount will be automatically applied to your
+              order if eligible.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-md mb-4">
-        <button class="flex justify-between items-center w-full p-5 text-left">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md"
+           [ngClass]="{'shadow-md': faq2Open}">
+        <button (click)="faq2Open = !faq2Open" 
+                class="flex justify-between items-center w-full p-5 text-left focus:outline-none">
           <span class="font-semibold text-gray-900">Can I combine multiple promotion codes?</span>
-          <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
+          <div class="bg-green-50 rounded-full p-1 transition-transform duration-300" 
+               [ngClass]="{'rotate-180': faq2Open}">
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
         </button>
+        <div class="overflow-hidden transition-all max-h-0 duration-300"
+             [ngClass]="{'max-h-40': faq2Open}">
+          <div class="px-5 pb-5 bg-gradient-to-r from-green-50 to-transparent border-l-4 border-green-500">
+            <p class="text-gray-600">
+              Generally, only one promotion code can be used per order. In some special cases, certain promotions
+              might be combinable with subscription discounts, but this will be clearly indicated.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-md mb-4">
-        <button class="flex justify-between items-center w-full p-5 text-left">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md"
+           [ngClass]="{'shadow-md': faq3Open}">
+        <button (click)="faq3Open = !faq3Open"
+                class="flex justify-between items-center w-full p-5 text-left focus:outline-none">
           <span class="font-semibold text-gray-900">How long do promotions last?</span>
-          <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
+          <div class="bg-green-50 rounded-full p-1 transition-transform duration-300"
+               [ngClass]="{'rotate-180': faq3Open}">
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
         </button>
+        <div class="overflow-hidden transition-all max-h-0 duration-300"
+             [ngClass]="{'max-h-40': faq3Open}">
+          <div class="px-5 pb-5 bg-gradient-to-r from-green-50 to-transparent border-l-4 border-green-500">
+            <p class="text-gray-600">
+              Promotion durations vary. Most seasonal promotions last 2-4 weeks, while special events may be
+              shorter. The expiration date is always clearly indicated on promotional materials and in your account.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-md mb-4">
-        <button class="flex justify-between items-center w-full p-5 text-left">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md"
+           [ngClass]="{'shadow-md': faq4Open}">
+        <button (click)="faq4Open = !faq4Open"
+                class="flex justify-between items-center w-full p-5 text-left focus:outline-none">
           <span class="font-semibold text-gray-900">What is your refund policy for promotional items?</span>
-          <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
+          <div class="bg-green-50 rounded-full p-1 transition-transform duration-300"
+               [ngClass]="{'rotate-180': faq4Open}">
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
         </button>
+        <div class="overflow-hidden transition-all max-h-0 duration-300"
+             [ngClass]="{'max-h-56': faq4Open}">
+          <div class="px-5 pb-5 bg-gradient-to-r from-green-50 to-transparent border-l-4 border-green-500">
+            <p class="text-gray-600">
+              Promotional items are subject to our standard 30-day return policy. If you're not completely
+              satisfied, you can return the product for a full refund. Please note that any promotional
+              discount applied will be deducted from your refund amount if the return affects order minimums.
+            </p>
+          </div>
+        </div>
       </div>
+      
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md"
+           [ngClass]="{'shadow-md': faq5Open}">
+        <button (click)="faq5Open = !faq5Open"
+                class="flex justify-between items-center w-full p-5 text-left focus:outline-none">
+          <span class="font-semibold text-gray-900">Are your products environmentally friendly?</span>
+          <div class="bg-green-50 rounded-full p-1 transition-transform duration-300"
+               [ngClass]="{'rotate-180': faq5Open}">
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+        </button>
+        <div class="overflow-hidden transition-all max-h-0 duration-300"
+             [ngClass]="{'max-h-56': faq5Open}">
+          <div class="px-5 pb-5 bg-gradient-to-r from-green-50 to-transparent border-l-4 border-green-500">
+            <p class="text-gray-600">
+              Yes! Sustainability is at our core. All our products are made from eco-friendly, sustainably sourced 
+              materials. Our packaging is recyclable or compostable, and we're committed to carbon-neutral shipping 
+              for all orders. We believe in products that are good for you and good for the planet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-10 text-center">
+      <a routerLink="/contact" class="inline-flex items-center text-green-600 hover:text-green-700 font-medium transition-colors group">
+        Still have questions? Contact our support team
+        <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" 
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
     </div>
   </div>
 </section>
