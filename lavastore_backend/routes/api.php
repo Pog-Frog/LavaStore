@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('dietary-preferences/{id}', [DietaryPreferenceController::class, 'destroy']);
 
     Route::get('orders', [OrderController::class, 'index']);
-    Route::post('orders/{id}', [OrderController::class, 'show']);
+    Route::get('orders/{id}', [OrderController::class, 'show']);
     Route::get('orders/user', [OrderController::class, 'getByUser']);
     Route::post('orders', [OrderController::class, 'store']);
     Route::put('orders/{id}', [OrderController::class, 'update']);

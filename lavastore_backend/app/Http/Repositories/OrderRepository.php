@@ -13,6 +13,7 @@ class OrderRepository
     {
         return Order::query()
             ->with('orderItems.product')
+            ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
     }
