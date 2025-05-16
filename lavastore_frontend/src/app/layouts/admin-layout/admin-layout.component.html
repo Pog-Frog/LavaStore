@@ -1,0 +1,140 @@
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar -->
+  <div 
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transition-transform duration-300 ease-in-out transform"
+    [ngClass]="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen, 'md:translate-x-0': true}">
+    
+    <div class="flex items-center justify-between h-16 px-6 border-b border-gray-800">
+      <span class="text-xl font-bold">LavaStore Admin</span>
+      <button (click)="toggleSidebar()" class="p-1 rounded-md md:hidden focus:outline-none focus:ring-2 focus:ring-white">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="px-2 py-4">
+      <ul class="space-y-1">
+        <li>
+          <a routerLink="/admin/dashboard" routerLinkActive="bg-gray-800" 
+            class="flex items-center px-4 py-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+            </svg>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/products" routerLinkActive="bg-gray-800" 
+            class="flex items-center px-4 py-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            Products
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/orders" routerLinkActive="bg-gray-800" 
+            class="flex items-center px-4 py-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Orders
+          </a>
+        </li>
+      </ul>
+
+      <div class="pt-8 mt-8 border-t border-gray-800">
+        <ul class="space-y-1">
+          <li>
+            <a routerLink="/" 
+              class="flex items-center px-4 py-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+              <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Visit Store
+            </a>
+          </li>
+          <li>
+            <button (click)="logout()" 
+              class="flex w-full items-center px-4 py-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+              <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex flex-col flex-1 md:ml-64">
+    <!-- Header -->
+    <header class="bg-white shadow-sm h-16 flex items-center z-40">
+      <div class="container flex items-center justify-end px-6 mx-auto">
+        <button (click)="toggleSidebar()" class="p-1 mr-4 md:hidden focus:outline-none">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Admin Profile -->
+        <div class="relative profile-menu">
+          <button (click)="toggleProfileMenu()" class="flex items-center focus:outline-none">
+            <div class="w-8 h-8 overflow-hidden rounded-full bg-gray-200">
+              <img 
+                *ngIf="currentUser?.profile_picture_url; else userInitial" 
+                [src]="storageUrl + currentUser?.profile_picture_url" 
+                alt="Admin profile"
+                class="object-cover w-full h-full"
+              />
+              <ng-template #userInitial>
+                <div class="flex items-center justify-center w-full h-full text-gray-700 font-medium">
+                  {{ currentUser?.name?.charAt(0).toUpperCase() || 'A' }}
+                </div>
+              </ng-template>
+            </div>
+            <span class="ml-2 text-sm font-medium text-gray-700">
+              {{ currentUser?.name || 'Admin' }}
+            </span>
+            <svg class="w-4 h-4 ml-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div 
+            *ngIf="profileMenuOpen" 
+            class="absolute right-0 w-48 mt-2 bg-white rounded-md shadow-lg py-1 z-50">
+            <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+            <div class="border-t border-gray-100"></div>
+            <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-y-auto bg-gray-50">
+      <div class="container px-6 py-8 mx-auto">
+        <ng-content></ng-content>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile sidebar overlay -->
+  <div 
+    *ngIf="sidebarOpen" 
+    (click)="toggleSidebar()"
+    class="fixed inset-0 z-40 bg-black/50 md:hidden">
+  </div>
+</div>

@@ -37,7 +37,9 @@ class UserController extends Controller
         ];
 
         if($request->hasFile('profile_picture')) {
-            Storage::delete($user->profile_picture_url);
+            if($user->profile_picture_url) {
+                Storage::delete($user->profile_picture_url);
+            }
             $file = $request->file('profile_picture');
             $path = $file->store('profile_pictures', 'public');
             $data['profile_picture_url'] = Storage::url($path);
