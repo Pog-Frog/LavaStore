@@ -8,6 +8,7 @@ export interface User {
     name: string;
     email: string;
     is_admin: boolean;
+    password?: string;
     profile_picture_url?: string | null;
 }
 
@@ -68,6 +69,34 @@ export class AuthService {
             .pipe(
                 tap(response => {
                     this.handleAuthentication(response);
+                })
+            );
+    }
+
+    updateUser(data: { name?: string; email?: string; password?: string; profile_picture_file?: File | null }): Observable<{message: string, data: User}> {
+        const updateUrl = `${environment.apiUrl}/users/profile-update`;
+        const formData = new FormData();
+
+        if (data.name) {
+            formData.append('name', data.name);
+        }
+        if (data.email) {
+            formData.append('email', data.email);
+        }
+        if (data.password) {
+            formData.append('password', data.password);
+        }
+        if (data.profile_picture_file) {
+            formData.append('profile_picture', data.profile_picture_file);
+        }
+
+        return this.http.post<{message: string, data: User}>(updateUrl, formData)
+            .pipe(
+                tap(response => {
+                    const updatedUser = response.data;
+                    // The backend should return the full updated user object, including the new profile_picture_url if changed.
+                    this.currentUserSubject.next(updatedUser);
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser)); // also update local storage
                 })
             );
     }
