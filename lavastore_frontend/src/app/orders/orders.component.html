@@ -84,15 +84,23 @@
               </p>
             </div>
             <div class="flex flex-col sm:items-end gap-2">
-              <span
-                [ngClass]="getStatusClass(order.status)"
-                class="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full border min-w-[80px] text-center whitespace-nowrap"
-              >
-                {{ order.status | titlecase }}
-              </span>
-              <p class="text-lg sm:text-xl font-bold text-gray-800">
-                Total: ${{ order.total | number : "1.2-2" }}
-              </p>
+              <p class="text-sm text-gray-500">Total: <span class="font-semibold text-gray-700">{{ getOrderTotal(order) | currency:'USD' }}</span></p>
+              <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mt-2 sm:mt-0">
+                <span class="text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+                <button 
+                  (click)="toggleOrderItems(order)"
+                  class="text-xs text-emerald-600 hover:text-emerald-800 font-medium py-1 px-2 rounded hover:bg-emerald-50 transition-colors">
+                  {{ order.showItems ? 'Hide Items' : 'Show Items' }}
+                </button>
+                <button 
+                  *ngIf="order.status.toLowerCase() === 'pending'"
+                  (click)="cancelOrder(order.id.toString())" 
+                  class="text-xs text-red-600 hover:text-red-800 font-medium py-1 px-2 rounded hover:bg-red-50 transition-colors border border-red-300 hover:border-red-500">
+                  Cancel Order
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -153,10 +161,10 @@
               </div>
               <div class="text-right ml-auto">
                 <p class="text-sm sm:text-base font-semibold text-gray-800">
-                  ${{ item.price | number : "1.2-2" }}
+                  {{ item.price | currency:'USD' }}
                 </p>
                 <p class="text-xs text-gray-500">
-                  (Subtotal: ${{ getItemSubtotal(item) | number : "1.2-2" }})
+                  (Subtotal: {{ getItemSubtotal(item) | currency:'USD'}})
                 </p>
               </div>
             </div>

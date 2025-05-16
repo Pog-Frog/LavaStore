@@ -31,23 +31,20 @@ export interface OrderItem {
   providedIn: 'root'
 })
 export class OrderService {
-  private adminOrdersUrl = `${environment.apiUrl}/orders`;
-  private userSpecificOrdersUrl = `${environment.apiUrl}/orders/user`;
+  private apiUrl = environment.apiUrl;
+  private ordersUrl = `${this.apiUrl}/orders/user`;
+  private createOrderUrl = `${this.apiUrl}/orders`;
+  private orderStatusUrl = (orderId: string) => `${this.apiUrl}/orders/${orderId}/status`;
+
   constructor(private http: HttpClient) {}
 
-  createOrder(orderPayload: CreateOrderPayload): Observable<BackendOrder> {
-    return this.http.post<BackendResponse<BackendOrder>>(this.adminOrdersUrl, orderPayload)
-      .pipe(
-        map(response => response.data),
-        catchError(error => {
-          console.error('Error creating order:', error);
-          return throwError(() => error);
-        })
-      );
+  createOrder(payload: CreateOrderPayload): Observable<BackendOrder> {
+    return this.http.post<BackendResponse<BackendOrder>>(this.createOrderUrl, payload)
+      .pipe(map(response => response.data));
   }
 
   getAllOrders(): Observable<BackendOrder[]> {
-    return this.http.get<BackendResponse<BackendOrder[]>>(this.adminOrdersUrl)
+    return this.http.get<BackendResponse<BackendOrder[]>>(`${this.apiUrl}/orders`)
       .pipe(
         map(response => response.data),
         catchError(error => {
@@ -58,7 +55,7 @@ export class OrderService {
   }
 
   getOrderById(orderId: number | string): Observable<BackendOrder> {
-    return this.http.get<BackendResponse<BackendOrder>>(`${this.adminOrdersUrl}/${orderId}`)
+    return this.http.get<BackendResponse<BackendOrder>>(`${this.apiUrl}/orders/${orderId}`)
       .pipe(
         map(response => response.data),
         catchError(error => {
@@ -69,27 +66,23 @@ export class OrderService {
   }
 
   getMyOrders(): Observable<BackendOrder[]> {
-    return this.http.get<BackendResponse<BackendOrder[]>>(this.userSpecificOrdersUrl)
-      .pipe(
-        map(response => response.data),
-        catchError(error => {
-          console.error('Error fetching orders:', error);
-          return throwError(() => error);
-        })
-      );
+    return this.http.get<BackendResponse<BackendOrder[]>>(`${this.ordersUrl}`)
+      .pipe(map(response => response.data));
   }
 
   updateOrderItems(orderId: number | string, itemsPayload: OrderItemPayload[]): Observable<BackendOrder> {
-    return this.http.put<BackendResponse<BackendOrder>>(`${this.adminOrdersUrl}/${orderId}`, itemsPayload)
+    return this.http.put<BackendResponse<BackendOrder>>(`${this.apiUrl}/orders/${orderId}`, itemsPayload)
       .pipe(map(response => response.data));
   }
 
-  updateOrderStatus(orderId: number | string, status: string): Observable<BackendOrder> {
-    return this.http.patch<BackendResponse<BackendOrder>>(`${this.adminOrdersUrl}/${orderId}/status`, { status })
-      .pipe(map(response => response.data));
+  updateOrderStatus(orderId: string, status: string): Observable<BackendOrder> {
+    return this.http.patch<BackendResponse<BackendOrder>>(
+      this.orderStatusUrl(orderId), 
+      { status }
+    ).pipe(map(response => response.data));
   }
 
   deleteOrder(orderId: number | string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.adminOrdersUrl}/${orderId}`);
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/orders/${orderId}`);
   }
 }

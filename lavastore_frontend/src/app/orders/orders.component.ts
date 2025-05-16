@@ -78,4 +78,24 @@ export class OrdersComponent implements OnInit {
   getItemSubtotal(item: BackendOrderItem): number {
     return parseFloat(item.price) * item.quantity;
   }
+
+  cancelOrder(orderId: string): void {
+    if (!orderId) return;
+
+    this.orderService.updateOrderStatus(orderId, 'cancelled').subscribe({
+      next: (updatedOrder) => {
+        this.notificationService.showSuccess('Order cancelled successfully.');
+        const index = this.orders.findIndex(o => o.id.toString() === orderId);
+        if (index !== -1) {
+          this.orders[index] = { ...this.orders[index], ...updatedOrder }; 
+        } else {
+          this.loadOrders(); 
+        }
+      },
+      error: (err) => {
+        this.notificationService.showError('Failed to cancel the order. Please try again.');
+        console.error('Error cancelling order:', err);
+      }
+    });
+  }
 }
