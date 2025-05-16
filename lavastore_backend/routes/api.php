@@ -33,8 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('dietary-preferences/{id}', [DietaryPreferenceController::class, 'destroy']);
 
     Route::get('orders', [OrderController::class, 'index']);
-    Route::get('orders/{id}', [OrderController::class, 'show']);
     Route::get('orders/user', [OrderController::class, 'getByUser']);
+    Route::get('orders/{id}', [OrderController::class, 'show']);
     Route::post('orders', [OrderController::class, 'store']);
     Route::put('orders/{id}', [OrderController::class, 'update']);
     Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
