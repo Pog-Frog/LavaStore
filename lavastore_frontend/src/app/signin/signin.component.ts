@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AuthComponent } from "../layouts/auth/auth.component";
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-signin',
@@ -15,7 +16,11 @@ export class SigninComponent {
   isLoading = false;
   error: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private notificationService: NotificationService
+  ) { }
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -31,6 +36,7 @@ export class SigninComponent {
 
       this.authService.login(email!, password!).subscribe({
         next: () => {
+          this.notificationService.showSuccess('Sign in successful');
           this.router.navigate(['/']);
         },
         error: (err) => {

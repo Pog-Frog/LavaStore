@@ -4,7 +4,7 @@ import { FormGroup, ReactiveFormsModule, Validators, FormControl, AbstractContro
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AuthComponent } from "../layouts/auth/auth.component";
-
+import { NotificationService } from '../services/notification.service';
 @Component({
   selector: 'app-signup',
   imports: [CommonModule, ReactiveFormsModule, AuthComponent],
@@ -17,7 +17,10 @@ export class SignupComponent {
   selectedFile: File | null = null;
 
   constructor(
-    private authService: AuthService, private router: Router) { }
+    private authService: AuthService, 
+    private router: Router,
+    private notificationService: NotificationService
+  ) { }
 
   passwordMatchValidator(control: AbstractControl) {
     const form = control as FormGroup;
@@ -57,7 +60,8 @@ export class SignupComponent {
 
       this.authService.register(name!, email!, password!, this.selectedFile).subscribe({
         next: () => {
-          this.router.navigate(['/auth/signin']);
+          this.notificationService.showSuccess('Registration successful');
+          this.router.navigate(['/']);
         },
         error: (err) => {
           this.isLoading = false;
