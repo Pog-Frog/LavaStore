@@ -5,12 +5,15 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DietaryPreferenceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/products/featured', [ProductController::class, 'getFeaturedProducts']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/users/profile-update', [UserController::class, 'updateUser']);
+
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::post('products', [ProductController::class, 'store']);
