@@ -1,3 +1,5 @@
+import { User } from "../services/auth.service";
+
 export interface OrderItemPayload {
   product_id: number;
   quantity: number;
@@ -34,6 +36,7 @@ export interface BackendOrder {
   created_at: string;
   updated_at: string;
   order_items: BackendOrderItem[]; 
+  user?: User
 }
 
 export interface BackendResponse<T> {

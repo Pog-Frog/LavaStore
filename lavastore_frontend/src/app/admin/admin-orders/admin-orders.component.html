@@ -1,0 +1,156 @@
+<app-admin-layout>
+  <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">Order Management</h1>
+    <p class="text-gray-600 mb-6">Manage all customer orders from this dashboard.</p>
+    
+    <!-- Filters -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+      <div class="flex-1">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            placeholder="Search by order ID or customer name" 
+            (input)="onSearch($event)"
+            class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+        </div>
+      </div>
+      <div class="sm:w-48">
+        <select 
+          [(ngModel)]="statusFilter" 
+          (change)="onFilterChange()"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        >
+          <option value="all">All Orders</option>
+          <option value="pending">Pending</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <button 
+        (click)="loadOrders()" 
+        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors sm:w-auto"
+      >
+        <div class="flex items-center justify-center">
+          <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh
+        </div>
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <p class="ml-3 text-gray-600">Loading orders...</p>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+      {{ error }}
+    </div>
+
+    <!-- No orders state -->
+    <div *ngIf="!loading && !error && filteredOrders.length === 0" class="text-center py-12">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">No Orders Found</h2>
+      <p class="text-gray-500">No orders match your current filter criteria.</p>
+    </div>
+
+    <!-- Orders table -->
+    <div *ngIf="!loading && !error && filteredOrders.length > 0" class="overflow-x-auto">
+      <table class="min-w-full bg-white rounded-lg overflow-hidden">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Total</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <ng-container *ngFor="let order of filteredOrders">
+            <tr class="hover:bg-gray-50 cursor-pointer" (click)="toggleOrderDetails(order.id)">
+              <td class="py-3 px-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">#{{ order.id }}</div>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">{{ order.user?.name || 'Unknown' }}</div>
+                <div class="text-sm text-gray-500">{{ order.user?.email || 'No email' }}</div>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ formatDate(order.created_at) }}</div>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">${{ order.total }}</div>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex space-x-2">
+                  <button 
+                    *ngIf="order.status.toLowerCase() !== 'pending' && order.status.toLowerCase() !== 'cancelled'"
+                    (click)="updateOrderStatus(order.id.toString(), 'pending'); $event.stopPropagation()"
+                    class="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                  >
+                    Process
+                  </button>
+                  <button 
+                    *ngIf="order.status.toLowerCase() !== 'delivered' && order.status.toLowerCase() !== 'cancelled'"
+                    (click)="updateOrderStatus(order.id.toString(), 'delivered'); $event.stopPropagation()"
+                    class="text-green-600 hover:text-green-800 font-medium transition-colors"
+                  >
+                    Deliver
+                  </button>
+                  <button 
+                    *ngIf="order.status.toLowerCase() !== 'cancelled'"
+                    (click)="updateOrderStatus(order.id.toString(), 'cancelled'); $event.stopPropagation()"
+                    class="text-red-600 hover:text-red-800 font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <!-- Expanded order details -->
+            <tr *ngIf="expandedOrderId === order.id">
+              <td colspan="6" class="p-4 bg-gray-50">
+                <div class="rounded-lg border border-gray-200 p-4 expanded-details">
+                  <h3 class="font-medium text-gray-900 mb-2">Order Items</h3>
+                  <div class="space-y-3">
+                    <div *ngFor="let item of order.order_items" class="flex items-center space-x-4 border-b border-gray-100 pb-3">
+                      <img 
+                        [src]="item.product.image_url || 'assets/images/placeholder.png'" 
+                        [alt]="item.product.name"
+                        class="w-12 h-12 object-cover rounded"
+                      >
+                      <div class="flex-1">
+                        <div class="text-sm font-medium text-gray-900">{{ item.product.name || 'Product #' + item.product_id }}</div>
+                        <div class="text-xs text-gray-500">
+                          {{ item.quantity }} × ${{ item.price }} = ${{ (item.quantity * +item.price).toFixed(2) }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-admin-layout>

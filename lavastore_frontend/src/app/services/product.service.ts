@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Product, PaginatedResponse, ProductFilters } from '../models/product.interface';
 import { environment } from '../../environments/environment';
+import { BackendResponse } from '../models/order.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -70,4 +71,18 @@ export class ProductService {
   getHomePageProducts(): Observable<{ message: string; data: Product[] }> {
     return this.http.get<{ message: string; data: Product[] }>(`${this.apiUrl}/featured`);
   }
-} 
+
+  createProduct(productData: any): Observable<Product> {
+    return this.http.post<BackendResponse<Product>>(this.apiUrl, productData)
+      .pipe(map(response => response.data));
+  }
+
+  updateProduct(id: string, productData: any): Observable<Product> {
+    return this.http.put<BackendResponse<Product>>(`${this.apiUrl}/${id}`, productData)
+      .pipe(map(response => response.data));
+  }
+
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+}
