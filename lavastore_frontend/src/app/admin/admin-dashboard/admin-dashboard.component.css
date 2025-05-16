@@ -1,0 +1,7 @@
+.bg-white {
+  transition: transform 0.2s ease-in-out;
+}
+
+.bg-white:hover {
+  transform: translateY(-2px);
+}

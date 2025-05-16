@@ -9,8 +9,9 @@ import { notAuthenticatedGuard } from './guards/notAuthenticated';
 import { OrdersComponent } from './orders/orders.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AboutComponent } from './about/about.component';
-import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { AdminGuard } from './guards/admin.guard';
+import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
     { path: '', component: BaseComponent },
@@ -21,6 +22,9 @@ export const routes: Routes = [
     { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
     { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
     { path: 'orders', component: OrdersComponent, canActivate: [authGuard] },
-    // Admin routes
-    {path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AdminGuard]},
+    
+    // Admin Routes
+    { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminGuard] },
+    { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard] },
+    { path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AdminGuard] },
 ];
