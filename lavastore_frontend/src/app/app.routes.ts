@@ -8,9 +8,11 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { notAuthenticatedGuard } from './guards/notAuthenticated';
 import { OrdersComponent } from './orders/orders.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AboutComponent } from './about/about.component';
 
 export const routes: Routes = [
     { path: '', component: BaseComponent },
+    { path: 'about', component: AboutComponent },
     { path: 'auth/signup', component: SignupComponent, canActivate: [notAuthenticatedGuard] },
     { path: 'auth/signin', component: SigninComponent, canActivate: [notAuthenticatedGuard] },
     { path: 'products', component: ProductsHomeComponent, canActivate: [authGuard] },

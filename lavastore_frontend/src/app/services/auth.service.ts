@@ -94,9 +94,8 @@ export class AuthService {
             .pipe(
                 tap(response => {
                     const updatedUser = response.data;
-                    // The backend should return the full updated user object, including the new profile_picture_url if changed.
                     this.currentUserSubject.next(updatedUser);
-                    localStorage.setItem('currentUser', JSON.stringify(updatedUser)); // also update local storage
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
                 })
             );
     }
