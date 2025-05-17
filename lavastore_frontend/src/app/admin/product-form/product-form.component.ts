@@ -41,7 +41,7 @@ export class ProductFormComponent implements OnInit {
             category_id: ['', Validators.required],
             is_featured: [false],
             badge: [''],
-            image: [null],
+            image_url: [''], // Changed from 'image: [null]'
             dietary_preferences: [[]],
         });
     }
@@ -104,11 +104,11 @@ export class ProductFormComponent implements OnInit {
                     category_id: product.category?.id,
                     is_featured: product.is_featured,
                     badge: product.badge,
+                    image_url: product.image_url, // Set image URL directly
                     dietary_preferences: product.dietary_preferences?.map(dp => dp.id) || []
                 });
-                console.log('Product loaded:', product);
-
-                // Set image preview if available
+                
+                // Set image preview if URL is available
                 if (product.image_url) {
                     this.imagePreview = product.image_url;
                 }
@@ -123,19 +123,16 @@ export class ProductFormComponent implements OnInit {
         });
     }
 
-    onImageSelected(event: Event): void {
-        const fileInput = event.target as HTMLInputElement;
-        if (fileInput.files && fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            this.productForm.patchValue({ image: file });
-
-            // Preview the selected image
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.imagePreview = reader.result as string;
-            };
-            reader.readAsDataURL(file);
+    onImageUrlChange(): void {
+        const imageUrl = this.productForm.get('image_url')!.value;
+        if (imageUrl) {
+            this.imagePreview = imageUrl;
         }
+    }
+
+    clearImageUrl(): void {
+        this.productForm.patchValue({ image_url: '' });
+        this.imagePreview = null;
     }
 
     toggleDietaryPreference(prefId: number): void {
@@ -166,34 +163,15 @@ export class ProductFormComponent implements OnInit {
             this.notificationService.showError('Please fill in all required fields correctly');
             return;
         }
-        console.log(this.productForm.value);
-
+        
         this.loading = true;
-
-        // Create FormData for the API request (to handle file upload)
-        const formData = new FormData();
-
-        // Append all form fields to FormData
-        Object.keys(this.productForm.value).forEach(key => {
-            if (key === 'image' && this.productForm.get('image')!.value) {
-                formData.append('image', this.productForm.get('image')!.value);
-            }
-            else if (key === 'dietary_preferences') {
-                const preferences = this.productForm.get('dietary_preferences')!.value as number[];
-                if (preferences && preferences.length) {
-                    preferences.forEach(prefId => {
-                        formData.append('dietary_preferences[]', prefId.toString());
-                    });
-                }
-            }
-            else if (this.productForm.get(key)!.value !== null && this.productForm.get(key)!.value !== undefined) {
-                formData.append(key, this.productForm.get(key)!.value);
-            }
-        });
-
+        
+        const productData = this.productForm.value;
+        
+        // No need for special image handling - just submit the form values directly
+        
         if (this.isEditMode && this.productId) {
-            // Update existing product
-            this.productService.updateProduct(this.productId, formData).subscribe({
+            this.productService.updateProduct(this.productId, productData).subscribe({
                 next: (product) => {
                     this.notificationService.showSuccess('Product updated successfully');
                     this.loading = false;
@@ -206,8 +184,7 @@ export class ProductFormComponent implements OnInit {
                 }
             });
         } else {
-            // Create new product
-            this.productService.createProduct(formData).subscribe({
+            this.productService.createProduct(productData).subscribe({
                 next: (product) => {
                     this.notificationService.showSuccess('Product created successfully');
                     this.loading = false;
