@@ -1,0 +1,225 @@
+<app-admin-layout>
+  <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h1>
+        <p class="text-gray-600">{{ isEditMode ? 'Update product information' : 'Create a new product in your catalog' }}</p>
+      </div>
+      <a routerLink="/admin/products" class="text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg px-4 py-2 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+        </svg>
+        Back to Products
+      </a>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <p class="ml-3 text-gray-600">{{ isEditMode ? 'Loading product data...' : 'Preparing form...' }}</p>
+    </div>
+
+    <!-- Product Form -->
+    <form *ngIf="!loading" [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name <span class="text-red-500">*</span></label>
+          <input 
+            type="text" 
+            id="name" 
+            formControlName="name" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+            [ngClass]="{'border-red-500': isInvalid('name')}"
+          >
+          <div *ngIf="isInvalid('name')" class="text-red-500 text-sm mt-1">
+            Product name is required and must be at least 3 characters.
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category <span class="text-red-500">*</span></label>
+          <select 
+            id="category" 
+            formControlName="category_id" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            [ngClass]="{'border-red-500': isInvalid('category_id')}"
+          >
+            <option [ngValue]="''">Select a category</option>
+            <option *ngFor="let category of categories" [ngValue]="category.id" >{{ category.name }}</option>
+          </select>
+          <div *ngIf="isInvalid('category_id')" class="text-red-500 text-sm mt-1">
+            Please select a category.
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price ($) <span class="text-red-500">*</span></label>
+          <input 
+            type="number" 
+            id="price" 
+            formControlName="price" 
+            step="0.01" 
+            min="0.01" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            [ngClass]="{'border-red-500': isInvalid('price')}"
+          >
+          <div *ngIf="isInvalid('price')" class="text-red-500 text-sm mt-1">
+            Please enter a valid price (minimum $0.01).
+          </div>
+        </div>
+
+        <!-- Original Price (for discounts) -->
+        <div>
+          <label for="original_price" class="block text-sm font-medium text-gray-700 mb-1">Original Price ($) <span class="text-gray-400">(optional)</span></label>
+          <input 
+            type="number" 
+            id="original_price" 
+            formControlName="original_price" 
+            step="0.01" 
+            min="0"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+          <div class="text-gray-500 text-xs mt-1">
+            Set this only if you want to show a crossed-out original price (for discounts).
+          </div>
+        </div>
+
+        <!-- Featured Product switch -->
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <input 
+              id="is_featured" 
+              type="checkbox" 
+              formControlName="is_featured" 
+              class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+            >
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="is_featured" class="font-medium text-gray-700">Featured Product</label>
+            <p class="text-gray-500">Featured products will appear on the home page and top of search results.</p>
+          </div>
+        </div>
+
+        <!-- Badge -->
+        <div>
+          <label for="badge" class="block text-sm font-medium text-gray-700 mb-1">Badge <span class="text-gray-400">(optional)</span></label>
+          <select 
+            id="badge" 
+            formControlName="badge" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+            <option value="">No Badge</option>
+            <option value="NEW">NEW</option>
+            <option value="BEST SELLER">BEST SELLER</option>
+            <option value="POPULAR">POPULAR</option>
+          </select>
+          <div class="text-gray-500 text-xs mt-1">
+            Badges are displayed prominently on product cards to attract attention.
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description <span class="text-red-500">*</span></label>
+        <textarea 
+          id="description" 
+          formControlName="description" 
+          rows="4" 
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          [ngClass]="{'border-red-500': isInvalid('description')}"
+        ></textarea>
+        <div *ngIf="isInvalid('description')" class="text-red-500 text-sm mt-1">
+          Description is required and must be at least 10 characters.
+        </div>
+      </div>
+
+      <!-- Product Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+          <div class="space-y-1 text-center">
+            <div *ngIf="!imagePreview" class="flex flex-col items-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div class="flex text-sm text-gray-600">
+                <label for="image-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
+                  <span>Upload a file</span>
+                  <input id="image-upload" type="file" class="sr-only" accept="image/*" (change)="onImageSelected($event)">
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+            </div>
+            
+            <div *ngIf="imagePreview" class="relative">
+              <img [src]="imagePreview" alt="Product image preview" class="mx-auto h-32 w-auto rounded-lg object-contain">
+              <div class="mt-2 flex justify-center">
+                <button 
+                  type="button" 
+                  class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  (click)="imagePreview = null"
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dietary Preferences -->
+      <div>
+        <span class="block text-sm font-medium text-gray-700 mb-2">Dietary Preferences</span>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div *ngFor="let pref of dietaryPreferences" 
+            (click)="toggleDietaryPreference(pref.id)"
+            class="flex items-center p-3 border rounded-lg cursor-pointer transition-colors"
+            [ngClass]="isPreferenceSelected(pref.id) ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:bg-gray-50'"
+          >
+            <input 
+              type="checkbox" 
+              [id]="'pref-' + pref.id" 
+              [checked]="isPreferenceSelected(pref.id)" 
+              class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+              (click)="$event.stopPropagation()"
+              (change)="toggleDietaryPreference(pref.id)"
+            >
+            <label [for]="'pref-' + pref.id" class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer">
+              {{ pref.name }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="flex justify-end space-x-3 border-t pt-6">
+        <button 
+          type="button" 
+          routerLink="/admin/products" 
+          class="bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="bg-green-600 py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          [disabled]="loading"
+        >
+          <span *ngIf="!loading">{{ isEditMode ? 'Update Product' : 'Create Product' }}</span>
+          <span *ngIf="loading" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</app-admin-layout>

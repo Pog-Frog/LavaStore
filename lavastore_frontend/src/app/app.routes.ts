@@ -12,6 +12,8 @@ import { AboutComponent } from './about/about.component';
 import { AdminGuard } from './guards/admin.guard';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminProductsComponent } from './admin/admin-products/admin-products.component';
+import { ProductFormComponent } from './admin/product-form/product-form.component';
 
 export const routes: Routes = [
     { path: '', component: BaseComponent },
@@ -27,4 +29,7 @@ export const routes: Routes = [
     { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminGuard] },
     { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard] },
     { path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AdminGuard] },
+    { path: 'admin/products', component: AdminProductsComponent, canActivate: [AdminGuard] },
+    { path: 'admin/products/new', component: ProductFormComponent, canActivate: [AdminGuard] },
+    { path: 'admin/products/:id/edit', component: ProductFormComponent, canActivate: [AdminGuard] },
 ];

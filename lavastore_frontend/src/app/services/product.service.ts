@@ -78,7 +78,7 @@ export class ProductService {
   }
 
   updateProduct(id: string, productData: any): Observable<Product> {
-    return this.http.put<BackendResponse<Product>>(`${this.apiUrl}/${id}`, productData)
+    return this.http.post<BackendResponse<Product>>(`${this.apiUrl}/${id}`, productData)
       .pipe(map(response => response.data));
   }
 
