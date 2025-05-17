@@ -71,7 +71,25 @@ class ProductController extends Controller
             ], 404);
         }
         $this->authorize('update', $product);
-        $product = $this->productRepository->update($id, $request->validated());
+        $data = [
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'original_price' => $request->input('original_price'),
+            'image_url' => $request->input('image_url'),
+            'category_id' => $request->input('category_id'),
+            'is_featured' => $request->input('is_featured') === 'true' ? true : false,
+            'badge' => $request->input('badge'),
+            'dietary_preferences' => $request->input('dietary_preferences')
+        ];
+
+        if($request->has('image')) {
+            $data['image_url'] = $request->input('image');
+        } else {
+            $data['image_url'] = $product->image_url;
+        }
+
+        $product = $this->productRepository->update($id, $data);
 
         return response()->json([
             'message' => 'Product updated successfully',

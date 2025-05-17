@@ -36,7 +36,8 @@ class ProductRepository {
         }
         $product->update($data);
         if(isset($data['dietary_preferences'])) {
-            $product->dietaryPreferences()->sync($data['dietary_preferences']);
+            $product->dietaryPreferences()->detach();
+            $product->dietaryPreferences()->attach($data['dietary_preferences']);
         }
         return $product;
     }   
