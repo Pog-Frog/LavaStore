@@ -30,7 +30,7 @@ class ProductUpdateRequest extends FormRequest
             'original_price' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'image_url' => ['sometimes', 'string', 'url', 'max:255'],
             'category_id' => ['sometimes', 'exists:categories,id'],
-            'is_featured' => ['sometimes', 'string'],
+            'is_featured' => ['sometimes', 'boolean'],
             'badge' => ['nullable', 'string', 'max:50', 'in:NEW,POPULAR,BEST SELLER'],
             'dietary_preferences' => ['sometimes', 'array'],
             'dietary_preferences.*' => ['exists:dietary_preferences,id']

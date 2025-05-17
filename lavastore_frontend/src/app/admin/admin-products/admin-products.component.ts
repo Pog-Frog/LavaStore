@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -8,6 +8,8 @@ import { NotificationService } from '../../services/notification.service';
 import { AdminLayoutComponent } from '../../layouts/admin-layout/admin-layout.component';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/product.interface';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-products',
@@ -16,7 +18,7 @@ import { Category } from '../../models/product.interface';
   templateUrl: './admin-products.component.html',
   styleUrls: ['./admin-products.component.css']
 })
-export class AdminProductsComponent implements OnInit {
+export class AdminProductsComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   categories: Category[] = [];
@@ -33,6 +35,10 @@ export class AdminProductsComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   itemsPerPage = 10;
+  
+  // For search debouncing
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
 
   constructor(
     private productService: ProductService,
@@ -41,22 +47,44 @@ export class AdminProductsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.setupSearchDebounce();
     this.loadCategories();
+    this.loadProducts();
+  }
+  
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
+  
+  setupSearchDebounce(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.searchQuery = searchTerm;
+      this.currentPage = 1;
+      this.loadProducts();
+    });
   }
 
   loadProducts(): void {
     this.loading = true;
     this.error = null;
     
-    this.productService.getProducts({
+    // Use the new search endpoint
+    this.productService.searchProducts({
+      q: this.searchQuery,
+      category_id: this.categoryFilter > 0 ? this.categoryFilter : undefined,
       page: this.currentPage,
-      per_page: this.itemsPerPage
+      per_page: this.itemsPerPage,
+      with: ['category']
     }).subscribe({
       next: (response) => {
         this.products = response.data.data;
         this.totalPages = response.data.last_page;
-        this.filteredProducts = [...this.products];
+        this.filteredProducts = this.products; // No need to filter client-side
         this.loading = false;
       },
       error: (err) => {
@@ -78,27 +106,14 @@ export class AdminProductsComponent implements OnInit {
     });
   }
 
-  onSearch(): void {
-    this.applyFilters();
+  onSearch(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value);
   }
 
   onCategoryChange(): void {
-    this.applyFilters();
-  }
-
-  applyFilters(): void {
-    this.filteredProducts = this.products.filter(product => {
-      // Apply search filter
-      const matchesSearch = this.searchQuery === '' || 
-        product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-      
-      // Apply category filter
-      const matchesCategory = this.categoryFilter === 0 || 
-        product.category_id === this.categoryFilter;
-      
-      return matchesSearch && matchesCategory;
-    });
+    this.currentPage = 1;
+    this.loadProducts();
   }
 
   onPageChange(page: number): void {
@@ -130,7 +145,6 @@ export class AdminProductsComponent implements OnInit {
       next: () => {
         this.notificationService.showSuccess('Product deleted successfully');
         this.products = this.products.filter(p => p.id !== this.productToDelete!.id);
-        this.applyFilters();
         this.showDeleteModal = false;
         this.productToDelete = null;
       },

@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Repositories\ProductRepository;
 use Spatie\QueryBuilder\QueryBuilder;
 
-//TODO: Add route to get the products that will be displayed in the index page
+
 class ProductController extends Controller
 {
     use AuthorizesRequests;
@@ -120,6 +120,45 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Products retrieved successfully',
+            'data' => $products
+        ]);
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $query = Product::query();
+        
+        if ($request->has('q') && !empty($request->q)) {
+            $searchTerm = $request->q;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('description', 'like', "%{$searchTerm}%");
+            });
+        }
+        
+        if ($request->has('category_id') && !empty($request->category_id)) {
+            $query->where('category_id', $request->category_id);
+        }
+        
+        if ($request->has('featured')) {
+            $query->where('is_featured', $request->featured === 'true' ? 1 : 0);
+        }
+
+        if ($request->has('with')) {
+            $relations = explode(',', $request->with);
+            $allowedRelations = ['category', 'dietary_preferences'];
+            $validRelations = array_intersect($relations, $allowedRelations);
+            
+            if (!empty($validRelations)) {
+                $query->with($validRelations);
+            }
+        }
+        
+        $perPage = $request->input('per_page', 10);
+        $products = $query->paginate($perPage);
+        
+        return response()->json([
+            'message' => 'Products found',
             'data' => $products
         ]);
     }

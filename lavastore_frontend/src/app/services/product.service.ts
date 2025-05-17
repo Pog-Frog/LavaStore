@@ -10,6 +10,7 @@ import { BackendResponse } from '../models/order.interface';
 })
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -84,5 +85,42 @@ export class ProductService {
 
   deleteProduct(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+
+  searchProducts(options: {
+    q?: string;
+    category_id?: number;
+    featured?: boolean;
+    page?: number;
+    per_page?: number;
+    with?: string[];
+  }): Observable<any> {
+    let params = new HttpParams();
+    
+    if (options.q) {
+      params = params.set('q', options.q);
+    }
+    
+    if (options.category_id && options.category_id > 0) {
+      params = params.set('category_id', options.category_id.toString());
+    }
+    
+    if (options.featured !== undefined) {
+      params = params.set('featured', options.featured.toString());
+    }
+    
+    if (options.page) {
+      params = params.set('page', options.page.toString());
+    }
+    
+    if (options.per_page) {
+      params = params.set('per_page', options.per_page.toString());
+    }
+    
+    if (options.with && options.with.length > 0) {
+      params = params.set('with', options.with.join(','));
+    }
+    
+    return this.http.get<any>(`${this.baseUrl}/products/search`, { params });
   }
 }
