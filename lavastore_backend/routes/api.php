@@ -12,34 +12,44 @@ use Illuminate\Support\Facades\Route;
 Route::get('/products/featured', [ProductController::class, 'getFeaturedProducts']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/users/profile-update', [UserController::class, 'updateUser']);
+    Route::prefix('users')->group(function () {
+        Route::post('/profile-update', [UserController::class, 'updateUser']);
+    });
 
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('products/search', [ProductController::class, 'search']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
-    Route::post('products', [ProductController::class, 'store']);
-    Route::post('products/{id}', [ProductController::class, 'update']);
-    Route::delete('products/{id}', [ProductController::class, 'destroy']);
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/search', [ProductController::class, 'search']);
+        Route::get('/{id}', [ProductController::class, 'show']);
+        Route::post('/', [ProductController::class, 'store']);
+        Route::post('/{id}', [ProductController::class, 'update']);
+        Route::delete('/{id}', [ProductController::class, 'destroy']);
+    });
 
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}', [CategoryController::class, 'show']);
-    Route::post('categories', [CategoryController::class, 'store']);
-    Route::put('categories/{id}', [CategoryController::class, 'update']);
-    Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index']);
+        Route::get('/{id}', [CategoryController::class, 'show']);
+        Route::post('/', [CategoryController::class, 'store']);
+        Route::put('/{id}', [CategoryController::class, 'update']);
+        Route::delete('/{id}', [CategoryController::class, 'destroy']);
+    });
 
-    Route::get('/dietary-preferences', [DietaryPreferenceController::class, 'index']);
-    Route::get('/dietary-preferences/{id}', [DietaryPreferenceController::class, 'show']);
-    Route::post('dietary-preferences', [DietaryPreferenceController::class, 'store']);
-    Route::put('dietary-preferences/{id}', [DietaryPreferenceController::class, 'update']);
-    Route::delete('dietary-preferences/{id}', [DietaryPreferenceController::class, 'destroy']);
+    Route::prefix('dietary-preferences')->group(function () {
+        Route::get('/', [DietaryPreferenceController::class, 'index']);
+        Route::get('/{id}', [DietaryPreferenceController::class, 'show']);
+        Route::post('/', [DietaryPreferenceController::class, 'store']);
+        Route::put('/{id}', [DietaryPreferenceController::class, 'update']);
+        Route::delete('/{id}', [DietaryPreferenceController::class, 'destroy']);
+    });
 
-    Route::get('orders', [OrderController::class, 'index']);
-    Route::get('orders/user', [OrderController::class, 'getByUser']);
-    Route::get('orders/{id}', [OrderController::class, 'show']);
-    Route::post('orders', [OrderController::class, 'store']);
-    Route::put('orders/{id}', [OrderController::class, 'update']);
-    Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
-    Route::delete('orders/{id}', [OrderController::class, 'destroy']);
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/user', [OrderController::class, 'getByUser']);
+        Route::get('/{id}', [OrderController::class, 'show']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::put('/{id}', [OrderController::class, 'update']);
+        Route::patch('/{id}/status', [OrderController::class, 'updateStatus']);
+        Route::delete('/{id}', [OrderController::class, 'destroy']);
+    });
 });
 
 Route::post('login', [AuthController::class, 'login']);
