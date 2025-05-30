@@ -185,22 +185,3 @@ LavaStore/
     └── tailwind.config.js   # TailwindCSS configuration
 ```
 
-## 🧪 Testing
-
-### Frontend (Angular)
-
-Navigate to the `lavastore_frontend` directory:
-```bash
-cd lavastore_frontend
-npm test  # or ng test (runs unit tests with Karma)
-# For e2e tests, ensure a framework like Cypress or Protractor is set up.
-# ng e2e
-```
-
-### Backend (Laravel)
-
-Navigate to the `lavastore_backend` directory:
-```bash
-cd lavastore_backend
-php artisan test # Runs PHPUnit tests
-```
