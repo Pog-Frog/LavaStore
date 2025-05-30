@@ -23,7 +23,7 @@ LavaStore is a modern full-stack e-commerce application focused on selling organ
 - **Secure Admin Panel**: Role-based access control for admin functionalities.
 
 
-- **Frontend**: Angular (v19+ indicated by `ng generate component component-name` in a previous README draft) with TypeScript, HTML, and CSS (TailwindCSS is used based on class names in HTML files).
+- **Frontend**: Angular (v19), TailwindCSS
 - **Backend**: Laravel PHP Framework, providing a RESTful API.
 - **Database**: MySQL (inferred from typical Laravel setups and previous README drafts).
 - **Authentication**: JWT token-based authentication (common for Laravel APIs).
